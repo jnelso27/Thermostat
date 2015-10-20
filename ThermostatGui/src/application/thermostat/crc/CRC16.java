@@ -45,10 +45,10 @@ public class CRC16
 	}
 
 	/**
-	 * Method to calculate 16-bit CRC based on Preset of 0xFFFF
-	 * and polynomial of 0x1021 ()
+	 * Method
 	 *
-	 * @param buffer
+	 * @param data
+	 * @return
 	 */
 	public static int calculateCRCCCITTFFFF(byte[] data)
 	{

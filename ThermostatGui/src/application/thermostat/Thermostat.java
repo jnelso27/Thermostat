@@ -26,6 +26,9 @@ import application.thermostat.sensors.SensorType;
 import application.thermostat.sensors.TemperatureSensor;
 
 /**
+ * Class Description
+ *
+ *
  * @author DeveloperMain
  *
  */

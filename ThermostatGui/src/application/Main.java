@@ -56,7 +56,7 @@ public class Main extends Application
 	//
 	Scene scene = new Scene(root, 800, 500, Color.WHITE);
 
-	//
+	//Tab Pane
 	TabPane tabPane = new TabPane();
 
 	//
