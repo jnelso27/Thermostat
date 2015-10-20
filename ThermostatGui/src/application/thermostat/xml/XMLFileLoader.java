@@ -122,7 +122,7 @@ public class XMLFileLoader
 	              comPort =  Integer.parseInt(elem.getElementsByTagName("ComPort").item(0).getChildNodes().item(0).getNodeValue());
 	              System.out.println("Load XML Settings-Loading Com Port setting:" + comPort);
 	         }
-	         if(node.getNodeName() == "Sensor")
+	         if(node.getNodeName() == "Sensor") //Test
 	         {
 	        	 System.out.println("Load XML Settings-Sensor");
 
