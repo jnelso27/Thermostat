@@ -24,18 +24,29 @@ import application.thermostat.sensors.TemperatureSensor;
 /***
  * Class Description
  *
- * @author Joshua Nelson
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class XMLFileLoader
 {
-	//Thermostat object to load settings to
+	/** Thermostat object to load settings to */
 	Thermostat thermostat = null;
 
+	/** Variable Description */
 	ThermostatLogger logger = null;
 
-	//List of Sensors to Build
+	/** List of Sensors to Build */
 	LinkedList<Sensor> listOfSensors = new LinkedList<Sensor>();
+
+	/**
+	 * Default Constructor
+	 */
+	public XMLFileLoader()
+	{
+		//Do nothing
+	}
 
 	/**
 	 * Method used to load up the configuration file
@@ -78,7 +89,6 @@ public class XMLFileLoader
 		}
 		catch (ParserConfigurationException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -89,7 +99,6 @@ public class XMLFileLoader
 		}
 		catch (SAXException | IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -142,7 +151,6 @@ public class XMLFileLoader
 	        	 }
 	        	 else if(sensorType == SensorType.LED)
 	        	 {
-	        		 //thermostat.addSensor(new AlarmSensor());
 	        		 listOfSensors.add(new AlarmSensor(sensorName,sensorType,testingFlag));
 	        		 System.out.println("Load XML Settings-Adding Sensor: " + sensorName + ", " + sensorType + ", " + testingFlag);
 	        	 }
@@ -157,10 +165,7 @@ public class XMLFileLoader
 	    logger = new ThermostatLogger(loggingPath, loggingEnabled, loggingLevel);
         thermostat = new Thermostat(highThreshold, lowThreshold, tempUnits, listOfSensors, logger);
 
-	    //Add Data Observers
 	    thermostat.addSensorObservers();
-	    //thermostat.setLoggerEnabled(loggingEnabled);
-	    //thermostat.setLoggingLevel(loggingLevel);
 
 	    ThermostatLogger.logger.severe("XML Settings Loaded Successfully");
 

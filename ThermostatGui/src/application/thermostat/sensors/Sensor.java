@@ -1,14 +1,15 @@
-/**
- *
- */
 package application.thermostat.sensors;
 
 import java.util.Observable;
 
 import application.thermostat.message.Message;
 
-/**
- * @author DeveloperMain
+/***
+ * Class Description
+ *
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class Sensor extends Observable

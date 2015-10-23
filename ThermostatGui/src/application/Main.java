@@ -20,9 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.io.File;
 import java.util.Observable;
 
-import application.thermostat.Thermostat;
-import application.thermostat.xml.XMLFileBuilder;
-import application.thermostat.xml.XMLFileLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -42,99 +39,108 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import application.thermostat.Thermostat;
+import application.thermostat.xml.XMLFileBuilder;
+import application.thermostat.xml.XMLFileLoader;
+
 /***
- * TODO: Class Description
+ * Class Description
  *
- * @author Joshua Nelson
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class Main extends Application
 {
-	//
-	Group root = new Group();
-
-	//
-	Scene scene = new Scene(root, 800, 500, Color.WHITE);
-
-	//Tab Pane
-	TabPane tabPane = new TabPane();
-
-	//
-	MenuBar menuBar = new MenuBar();
-
-	 //
-    private int graphTimeSetting = NUM_SECONDS_IN_TEN_MINUTES;
-
-	//
+	/** Constants for number of points on the chart/graph */
     private static final int MAX_DATA_POINTS = 50;
+    private static final int NUM_SECONDS_IN_DEFAULT = 30;
+    private static final int NUM_SECONDS_IN_ONE_MINUTE = 60;
     private static final int NUM_SECONDS_IN_TEN_MINUTES = 600;
     private static final int NUM_SECONDS_IN_ONE_HOUR = 3600;
     private static final int NUM_SECONDS_IN_ONE_DAY = 86400;
     private static final int NUM_SECONDS_IN_ONE_WEEK = 604800;
 
-    //Chart for displaying the current temperature
+	/** Comment */
+	Group root = new Group();
+
+	/** Comment */
+	Scene scene = new Scene(root, 800, 500, Color.WHITE);
+
+	/** Comment */
+	TabPane tabPane = new TabPane();
+
+	/** Comment */
+	MenuBar menuBar = new MenuBar();
+
+	/** Comment */
+    private int graphTimeSetting = NUM_SECONDS_IN_TEN_MINUTES;
+
+    /** Comment */
+    int numGraphPoints = NUM_SECONDS_IN_DEFAULT;
+
+    /** Comment */
     private XYChart.Series<Number, Number> series1 = new XYChart.Series<>();
-    private XYChart.Series<Number, Number> series2 = new XYChart.Series<>();
-    private XYChart.Series<Number, Number> series3 = new XYChart.Series<>();
-    private XYChart.Series<Number, Number> series4 = new XYChart.Series<>();
 
-    //
+    /** Comment */
     private int xSeries1Data = 0;
-    private int xSeries2Data = 0;
-    private int xSeries3Data = 0;
-    private int xSeries4Data = 0;
 
-    //
-    private NumberAxis series1XAxis;
-    private NumberAxis series2XAxis;
-    private NumberAxis series3XAxis;
-    private NumberAxis series4XAxis;
+    /** Comment */
+    private NumberAxis series1XAxis =new NumberAxis(0, MAX_DATA_POINTS, MAX_DATA_POINTS / 10);
 
-    //
+    /** Used for the Graph */
+    NumberAxis yAxis1 = new NumberAxis();
+    final LineChart<Number, Number> lineChart1 = new LineChart<Number, Number>(series1XAxis, yAxis1);
+
+    /** Comment */
     private ExecutorService executor;
 
-    //Variables for Settings Tab
+    /** Comment */
     Tab settingsTab = new Tab();
     VBox settingsVBox = new VBox();
     TextField highThresholdTextField = new TextField();
     TextField lowThresholdTextField = new TextField();
     Button settingsApplyButton = new Button("Apply");
 
-    //
+    /** Comment */
     ObservableList<String> options = FXCollections.observableArrayList(
     	        "Last 10 Minutes",
     	        "Last 60 Minutes",
     	        "Last 24 Hours",
     	        "Last Week"
     	    );
-    final ComboBox<String> graphSelectionComboBox = new ComboBox<String>(options);
 
+    /** Comment */
     AnimationTimer graphTimer = new AnimationTimer()
     {
         @Override
         public void handle(long now)
         {
         	addDataToSeries1();
-        	addDataToSeries2();
-        	addDataToSeries3();
-        	addDataToSeries4();
         }
     };
 
-    //Variables for Current Tab
+    /** Comment */
     Tab currentTab = new Tab();
 
-    //XMLFileLoader to load application XML Settings file
+    /** XMLFileLoader to load application XML Settings file */
     XMLFileLoader configurationFileLoader = new XMLFileLoader();
 
-    //FileBuilder to save application XML Settings file
+    /** FileBuilder to save application XML Settings file */
     XMLFileBuilder configureationFileSaver = new XMLFileBuilder();
 
-    //Thermostat object to handle all major operations (primary backend object)
+    /** Thermostat object to handle all major operations (primary backend object) */
     Thermostat thermostat = null;
 
-    //TextField for displyaing the current temperature reading
+    /** TextField for displyaing the current temperature reading */
     TextField tempReadingTextField = new TextField();
+
+    /** Comment */
+    Tab tab3 = new Tab();
+
+    /** Comment */
+    HBox hbox3 = new HBox();
 
     /**
      * Method Description
@@ -163,17 +169,11 @@ public class Main extends Application
                 	if(thermostat.isTemperatureUnitsInFarenheit())
                 	{
 	                	series1.getData().add(new XYChart.Data<>(xSeries1Data++, (double)arg));
-	                	series2.getData().add(new XYChart.Data<>(xSeries2Data++, (double)arg));
-	                	series3.getData().add(new XYChart.Data<>(xSeries3Data++, (double)arg));
-	                	series4.getData().add(new XYChart.Data<>(xSeries4Data++, (double)arg));
 	                	tempReadingTextField.setText(Double.toString((double)arg));
                 	}
                 	else //Display in Celcius
                 	{
-                		series1.getData().add(new XYChart.Data<>(xSeries1Data++, (((double)arg-32)*5)/9)); //
-                		series2.getData().add(new XYChart.Data<>(xSeries2Data++, (((double)arg-32)*5)/9));
-                		series3.getData().add(new XYChart.Data<>(xSeries3Data++, (((double)arg-32)*5)/9));
-                		series4.getData().add(new XYChart.Data<>(xSeries4Data++, (((double)arg-32)*5)/9));
+                		series1.getData().add(new XYChart.Data<>(xSeries1Data++, (((double)arg-32)*5)/9));
 	                	tempReadingTextField.setText(Double.toString((((double)arg-32)*5)/9));
                 	}
                 }
@@ -188,9 +188,6 @@ public class Main extends Application
         buildSettingsTab();
         buildCurrentTab();
         buildTenMinuteHistoryTab();
-        buildSixtyMinuteHistoryTab();
-        buildOneDayHistoryTab();
-        buildOneWeekHistoryTab();
 
         //Set preferred height/width for the pane
         borderPane.prefHeightProperty().bind(scene.heightProperty());
@@ -226,12 +223,35 @@ public class Main extends Application
      */
     private void prepareTimeline()
     {
-    	//if(graphTimer != null)
-    	//{
-    	//	graphTimer.stop();
-    	//}
-
     	graphTimer.start();
+    }
+
+    private void changeGraph(int numPoints)
+    {
+    	System.out.println("Called changeGraph()------------------------------------------");
+
+    	//if(numPoints )
+    	//{
+    		graphTimeSetting = numPoints;
+    	//}
+		/*
+    	lineChart1.getData().removeAll(series1);
+    	hbox3.getChildren().remove(lineChart1);
+
+    	series1XAxis.setLowerBound(0);
+        series1XAxis.setUpperBound(500);
+        //series1XAxis.setScaleX(NUM_SECONDS_IN_ONE_WEEK);
+       // lineChart1.getData().
+        //lineChart1.getData().
+        lineChart1.getData().addAll(series1);
+
+
+        hbox3.getChildren().add(lineChart1);
+        hbox3.setAlignment(Pos.CENTER);
+        tab3.setContent(hbox3);
+
+       // hbox3.getChildren().remove(lineChart1);
+	*/
     }
 
     /**
@@ -239,12 +259,7 @@ public class Main extends Application
      */
     private void addDataToSeries1()
     {
-        if (series1.getData().size() > NUM_SECONDS_IN_TEN_MINUTES )
-        {
-            series1.getData().remove(0, series1.getData().size() - NUM_SECONDS_IN_TEN_MINUTES );
-        }
-
-        series1XAxis.setLowerBound(xSeries1Data - NUM_SECONDS_IN_TEN_MINUTES );
+    	series1XAxis.setLowerBound(xSeries1Data - graphTimeSetting );
         series1XAxis.setUpperBound(xSeries1Data - 1);
     }
 
@@ -253,13 +268,8 @@ public class Main extends Application
      */
     private void addDataToSeries2()
     {
-        if (series2.getData().size() > NUM_SECONDS_IN_ONE_HOUR)
-        {
-            series2.getData().remove(0, series2.getData().size() - NUM_SECONDS_IN_ONE_HOUR);
-        }
-
-        series2XAxis.setLowerBound(xSeries2Data - NUM_SECONDS_IN_ONE_HOUR);
-        series2XAxis.setUpperBound(xSeries2Data - 1);
+    	series1XAxis.setLowerBound(xSeries1Data - NUM_SECONDS_IN_ONE_HOUR );
+        series1XAxis.setUpperBound(xSeries1Data - 1);
     }
 
     /**
@@ -267,13 +277,8 @@ public class Main extends Application
      */
     private void addDataToSeries3()
     {
-        if (series3.getData().size() > NUM_SECONDS_IN_ONE_DAY)
-        {
-            series3.getData().remove(0, series3.getData().size() - NUM_SECONDS_IN_ONE_DAY);
-        }
-
-        series3XAxis.setLowerBound(xSeries3Data - NUM_SECONDS_IN_ONE_DAY);
-        series3XAxis.setUpperBound(xSeries3Data - 1);
+    	series1XAxis.setLowerBound(xSeries1Data - NUM_SECONDS_IN_ONE_DAY );
+        series1XAxis.setUpperBound(xSeries1Data - 1);
     }
 
     /**
@@ -281,13 +286,8 @@ public class Main extends Application
      */
     private void addDataToSeries4()
     {
-        if (series4.getData().size() > NUM_SECONDS_IN_ONE_WEEK)
-        {
-            series4.getData().remove(0, series4.getData().size() - NUM_SECONDS_IN_ONE_WEEK);
-        }
-
-        series4XAxis.setLowerBound(xSeries4Data - NUM_SECONDS_IN_ONE_WEEK);
-        series4XAxis.setUpperBound(xSeries4Data - 1);
+        series1XAxis.setLowerBound(xSeries1Data - NUM_SECONDS_IN_ONE_WEEK );
+        series1XAxis.setUpperBound(xSeries1Data - 1);
     }
 
     /**
@@ -315,6 +315,7 @@ public class Main extends Application
             public void handle(ActionEvent t)
             {
                 System.out.println("Testing Stop Thermostat Menu Item");
+                System.out.println("Series Size: "+series1.getData().size());
                 thermostat.stopSensorMeasurements();
             }
         });
@@ -377,7 +378,7 @@ public class Main extends Application
             }
         });
 
-    	//Add MenuItems to the File Menu Dropdown
+    	//Add MenuItems to the "File" Menu
     	menuFile.getItems().add(startThermostatOption);
     	menuFile.getItems().add(stopThermostatOption);
     	menuFile.getItems().add(loadXMLSettingsOption);
@@ -387,6 +388,57 @@ public class Main extends Application
 
     	//Add
 		Menu menuEdit = new Menu("Edit");
+
+		MenuItem graphDisplayOfThirtySeconds = new MenuItem("Display Last 30 Seconds");
+		graphDisplayOfThirtySeconds.setOnAction(new EventHandler<ActionEvent>()
+    	{
+            public void handle(ActionEvent t)
+            {
+                changeGraph(NUM_SECONDS_IN_DEFAULT);
+            }
+        });
+
+		MenuItem graphDisplayOfLastOneMinute = new MenuItem("Display Last 60 Seconds");
+		graphDisplayOfLastOneMinute.setOnAction(new EventHandler<ActionEvent>()
+    	{
+            public void handle(ActionEvent t)
+            {
+                changeGraph(NUM_SECONDS_IN_ONE_MINUTE);
+            }
+        });
+
+		MenuItem graphDisplayOfLastOneHour = new MenuItem("Display Last 60 Minutes");
+		graphDisplayOfLastOneHour.setOnAction(new EventHandler<ActionEvent>()
+    	{
+            public void handle(ActionEvent t)
+            {
+                changeGraph(NUM_SECONDS_IN_ONE_HOUR);
+            }
+        });
+		MenuItem graphDisplayOfLastOneDay = new MenuItem("Display Last 24 Hours");
+		graphDisplayOfLastOneDay.setOnAction(new EventHandler<ActionEvent>()
+    	{
+            public void handle(ActionEvent t)
+            {
+                changeGraph(NUM_SECONDS_IN_ONE_DAY);
+            }
+        });
+		MenuItem graphDisplayOfLastWeek = new MenuItem("Display Last 1 Week");
+		graphDisplayOfLastWeek.setOnAction(new EventHandler<ActionEvent>()
+    	{
+            public void handle(ActionEvent t)
+            {
+                changeGraph(NUM_SECONDS_IN_ONE_WEEK);
+            }
+        });
+
+		//Add MenuItems to the "Edit" Menu
+    	menuEdit.getItems().add(graphDisplayOfThirtySeconds);
+    	menuEdit.getItems().add(graphDisplayOfLastOneMinute);
+    	menuEdit.getItems().add(graphDisplayOfLastOneHour);
+    	menuEdit.getItems().add(graphDisplayOfLastOneDay);
+    	menuEdit.getItems().add(graphDisplayOfLastWeek);
+
 		Menu menuHelp = new Menu("Help");
 
 		//Add all menus to the menubar
@@ -409,42 +461,6 @@ public class Main extends Application
         lowThresholdTextField.setMaxWidth(100);
         settingsVBox.getChildren().add(lowThresholdTextField);
 
-        //Add ComboBox for Graph Options
-        //graphSelectionComboBox.getItems().addAll("Last 10 Minutes","Last 60 Minutes","Last 24 Hours","Last Week");
-       // graphSelectionComboBox.setValue("Last 10 Minutes");
-        graphSelectionComboBox.valueProperty().addListener(new ChangeListener<String>()
-        {
-            @Override
-            public void changed(final ObservableValue ov, final String t, final String t1)
-            {
-                  if(t1.equals(options.get(0)))
-                  {
-                	  System.out.print("Equals Option1 Mofo!");
-                	  //setGraphTimeSetting(NUM_SECONDS_IN_TEN_MINUTES);
-                	  //prepareTimeline();
-                  }
-                  else if(t1.equals(options.get(1)))
-                  {
-                	  System.out.print("Equals Option2 Mofo!");
-                	  //setGraphTimeSetting(NUM_SECONDS_IN_ONE_HOUR);
-                	  //prepareTimeline( );
-                  }
-                  else if(t1.equals(options.get(2)))
-                  {
-                	  System.out.print("Equals Option3 Mofo!");
-                	  //setGraphTimeSetting(NUM_SECONDS_IN_ONE_DAY);
-                	  //prepareTimeline( );
-                  }
-                  else
-                  {
-                	  System.out.print("Equals Option4 Mofo!");
-                	  //setGraphTimeSetting(NUM_SECONDS_IN_ONE_WEEK);
-                	 // prepareTimeline( );
-                  }
-
-              }
-          });
-        settingsVBox.getChildren().add(graphSelectionComboBox);
 
         settingsApplyButton.setPrefWidth(100);
         settingsApplyButton.setOnAction(new EventHandler<ActionEvent>()
@@ -529,12 +545,10 @@ public class Main extends Application
         currentTabVBoxContainer.getChildren().add(farenheitRadioButton);
         currentTabVBoxContainer.getChildren().add(celciusRadioButton);
 
-
-
        // tempReadingTextField.setT
         tempReadingTextField.setMaxWidth(100);
-        currentTabVBoxContainer.getChildren().add(tempReadingTextField);
 
+        currentTabVBoxContainer.getChildren().add(tempReadingTextField);
         currentTabVBoxContainer.setAlignment(Pos.TOP_LEFT);
 
         currentTab.setContent(currentTabVBoxContainer);
@@ -547,150 +561,29 @@ public class Main extends Application
      */
     private void buildTenMinuteHistoryTab()
     {
-    	//History Tab
-        Tab tab3 = new Tab();
-        tab3.setText("History");
-        HBox hbox3 = new HBox();
+    	tab3.setText("History");
 
-
-    	series1XAxis = new NumberAxis(0, MAX_DATA_POINTS, MAX_DATA_POINTS / 10);
         series1XAxis.setForceZeroInRange(false);
         series1XAxis.setAutoRanging(false);
         series1XAxis.setTickLabelsVisible(true);
         series1XAxis.setTickMarkVisible(true);
         series1XAxis.setMinorTickVisible(true);
 
-        NumberAxis yAxis = new NumberAxis();
-
-        // Create a LineChart
-        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(series1XAxis, yAxis);
-
-        lineChart.setAnimated(false);
-        lineChart.setTitle("Temperature vs. Time");
-        lineChart.setHorizontalGridLinesVisible(true);
-        lineChart.setPrefWidth(780);
+        lineChart1.setAnimated(false);
+        lineChart1.setTitle("Temperature vs. Time");
+        lineChart1.setHorizontalGridLinesVisible(true);
+        lineChart1.setPrefWidth(780);
 
         // Set Name for Series
         series1.setName("TMP102 Reading");
 
         // Add Chart Series
-        lineChart.getData().addAll(series1);
+        lineChart1.getData().addAll(series1);
 
-        hbox3.getChildren().add(lineChart);
+        hbox3.getChildren().add(lineChart1);
         hbox3.setAlignment(Pos.CENTER);
         tab3.setContent(hbox3);
         tabPane.getTabs().add(tab3);
-    }
-
-    private void buildSixtyMinuteHistoryTab()
-    {
-    	//History Tab
-        Tab sixtyMinuteHistoryTab = new Tab();
-        sixtyMinuteHistoryTab.setText("History-Last 60 Minutes");
-        HBox sixtyMinuteHistoryTabHBox = new HBox();
-
-    	series2XAxis = new NumberAxis(0, MAX_DATA_POINTS, MAX_DATA_POINTS / 10);
-        series2XAxis.setForceZeroInRange(false);
-        series2XAxis.setAutoRanging(false);
-        series2XAxis.setTickLabelsVisible(false);
-        series2XAxis.setTickMarkVisible(false);
-        series2XAxis.setMinorTickVisible(false);
-
-        NumberAxis yAxis = new NumberAxis();
-
-        // Create a LineChart
-        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(series2XAxis, yAxis);
-
-        lineChart.setAnimated(false);
-        lineChart.setTitle("Temperature vs. Time (Last 60 Minutes)");
-        lineChart.setHorizontalGridLinesVisible(true);
-        lineChart.setPrefWidth(780);
-
-        // Set Name for Series
-        series2.setName("TMP102 Reading");
-
-        // Add Chart Series
-        lineChart.getData().addAll(series2);
-
-        sixtyMinuteHistoryTabHBox.getChildren().add(lineChart);
-        sixtyMinuteHistoryTabHBox.setAlignment(Pos.CENTER);
-        sixtyMinuteHistoryTab.setContent(sixtyMinuteHistoryTabHBox);
-        tabPane.getTabs().add(sixtyMinuteHistoryTab);
-    }
-
-    private void buildOneDayHistoryTab()
-    {
-    	//History Tab
-        Tab oneDayHistoryTab = new Tab();
-        oneDayHistoryTab.setText("History-Last 24 Hours");
-        HBox oneDayHistoryTabHBox = new HBox();
-
-    	series3XAxis = new NumberAxis(0, MAX_DATA_POINTS, MAX_DATA_POINTS / 10);
-        series3XAxis.setForceZeroInRange(false);
-        series3XAxis.setAutoRanging(false);
-        series3XAxis.setTickLabelsVisible(false);
-        series3XAxis.setTickMarkVisible(false);
-        series3XAxis.setMinorTickVisible(false);
-
-        NumberAxis yAxis = new NumberAxis();
-
-        // Create a LineChart
-        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(series3XAxis, yAxis);
-
-        lineChart.setAnimated(false);
-        lineChart.setTitle("Temperature vs. Time (Last 24 Hours)");
-        lineChart.setHorizontalGridLinesVisible(true);
-        lineChart.setPrefWidth(780);
-
-        // Set Name for Series
-        series3.setName("TMP102 Reading");
-
-        // Add Chart Series
-        lineChart.getData().addAll(series3);
-
-        oneDayHistoryTabHBox.getChildren().add(lineChart);
-        oneDayHistoryTabHBox.setAlignment(Pos.CENTER);
-        oneDayHistoryTab.setContent(oneDayHistoryTabHBox);
-        tabPane.getTabs().add(oneDayHistoryTab);
-    }
-
-    /**
-     * Method Description
-     */
-    private void buildOneWeekHistoryTab()
-    {
-    	//History Tab
-        Tab oneWeekHistoryTab = new Tab();
-        oneWeekHistoryTab.setText("History-Last 24 Hours");
-        HBox oneWeekHistoryTabHBox = new HBox();
-
-    	series4XAxis = new NumberAxis(0, MAX_DATA_POINTS, MAX_DATA_POINTS / 10);
-        series4XAxis.setForceZeroInRange(false);
-        series4XAxis.setAutoRanging(false);
-        series4XAxis.setTickLabelsVisible(false);
-        series4XAxis.setTickMarkVisible(false);
-        series4XAxis.setMinorTickVisible(false);
-
-        NumberAxis yAxis = new NumberAxis();
-
-        // Create a LineChart
-        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(series4XAxis, yAxis);
-
-        lineChart.setAnimated(false);
-        lineChart.setTitle("Temperature vs. Time (Last 1 Week)");
-        lineChart.setHorizontalGridLinesVisible(true);
-        lineChart.setPrefWidth(780);
-
-        // Set Name for Series
-        series4.setName("TMP102 Reading");
-
-        // Add Chart Series
-        lineChart.getData().addAll(series4);
-
-        oneWeekHistoryTabHBox.getChildren().add(lineChart);
-        oneWeekHistoryTabHBox.setAlignment(Pos.CENTER);
-        oneWeekHistoryTab.setContent(oneWeekHistoryTabHBox);
-        tabPane.getTabs().add(oneWeekHistoryTab);
     }
 
     /**

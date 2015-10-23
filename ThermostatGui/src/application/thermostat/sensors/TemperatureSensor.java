@@ -1,21 +1,21 @@
 package application.thermostat.sensors;
 
-import java.util.Observable;
-
 import application.thermostat.message.constants.MessageConstants;
 
-/**
+/***
  * Class Description
  *
- * @author Joshua Nelson
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class TemperatureSensor extends Sensor
 {
-	//Temperature in Degrees Celcius
+	/** Temperature in Degrees Celcius */
 	public double temp_in_celcius = 0;
 
-	//Temperature in Degrees Farenheit
+	/** Temperature in Degrees Farenheit */
 	public double temp_in_farenheit = 0;
 
 	/**

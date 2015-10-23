@@ -1,27 +1,27 @@
 package application.thermostat.message;
 
-import java.nio.ByteBuffer;
-
 import application.thermostat.crc.CRC16;
 
 /***
  * Class Description
  *
- * @author Joshua
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public abstract class Message
 {
-	//Character representing the start of the message
+	/** Character representing the start of the message */
 	public static byte messageHeader = '&';
 
-	//Character representing the end of the message
+	/** Character representing the end of the message */
 	public static byte messageFooter = '$';
 
-	//
+	/** Variable Description */
 	public byte messageType = MessageType.DEFAULT_MSG;
 
-	//Message Indexes
+	/** Message Indexes */
 	public static final int REC_MSG_HEADER_NDX = 0;
 	public static final int REC_MSG_TYPE_NDX = 1;
 	public static final int REC_MSG_DATA_MSB_NDX = 2;
@@ -30,16 +30,16 @@ public abstract class Message
 	public static final int REC_MSG_CRCBYTE2_NDX = 5;
 	public static final int REC_MSG_FOOTER_NDX = 6;
 
-	//Message Size
+	/** Message Size */
 	public static final int MESSAGE_SIZE = 7;
 
-	//
+	/** Variable Description */
 	public byte messageData[] = {'A','A'};
 
-	//
+	/** Variable Description */
 	private byte message[] = {'0','0','0','0','0','0','0'};
 
-	//
+	/** Variable Description */
 	private byte messagePayload[] = {'0','0','0'};
 
 
@@ -52,7 +52,7 @@ public abstract class Message
 	}
 
 	/**
-	 * Method
+	 * Constructor Description
 	 *
 	 * @param messageType
 	 * @param messageData
@@ -79,7 +79,7 @@ public abstract class Message
 	}
 
 	/**
-	 * Method
+	 * Method Description
 	 *
 	 * @param messageType
 	 * @param messageData2

@@ -6,12 +6,14 @@ import jssc.SerialPortException;
 /***
  * Class Description
  *
- * @author Joshua Nelson
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class MessageSender
 {
-	//Serial Port used to send messages
+	/** Serial Port used to send messages */
 	private static SerialPort serialPort;
 
 	/**
@@ -23,7 +25,7 @@ public class MessageSender
 	}
 
 	/**
-	 * Constructor
+	 * Constructor Description
 	 *
 	 * @param baud The baud rate to use for the serial communication
 	 * @param data_bits The number of data bits to use for the serial communication

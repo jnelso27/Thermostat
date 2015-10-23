@@ -1,6 +1,3 @@
-/**
- *
- */
 package application.thermostat.xml;
 
 import java.io.File;
@@ -19,15 +16,26 @@ import org.w3c.dom.Element;
 
 import application.thermostat.Thermostat;
 
-/**
+/***
  * Class Description
  *
- * @author DeveloperMain
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class XMLFileBuilder
 {
 	/**
+	 * Default Constructor
+	 */
+	public XMLFileBuilder()
+	{
+		//Do nothing
+	}
+
+	/**
+	 * Method Description
 	 *
 	 * @param thermostat
 	 * @param filePath
@@ -71,7 +79,6 @@ public class XMLFileBuilder
 			applicationSettings.appendChild(comPort);
 
 			//Now loop through the sensorlist
-			//TODO on next step
 			for(int i=0;i<thermostat.getSensorListSize();i++)
 			{
 				Element sensor = doc.createElement("Sensor");

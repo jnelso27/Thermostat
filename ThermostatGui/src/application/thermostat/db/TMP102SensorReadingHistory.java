@@ -12,24 +12,26 @@ import java.util.List;
  * Class used to write the TMP102Sensor Records. Currently implemented to write to a simple LinkedList and then
  * save to a normal text file upon command.
  *
+ * Date: 2015
+ *
  * @author Joshua Nelson
  *
  */
 public class TMP102SensorReadingHistory
 {
-	//List of temperature sensor records
+	/** List of temperature sensor records */
 	List<TMP102SensorRecord> tempReading = new LinkedList<TMP102SensorRecord>();
 
-	//File for writing to
+	/** File for writing to */
 	File file = null;
 
-	//FileWriter for writing to
+	/** FileWriter for writing to */
 	FileWriter fileWriter = null;
 
-	//
+	/** Variable Description */
 	PrintWriter printWriter = null;
 
-	//Path of the file to export to
+	/** Default Path of the file to export to */
 	String filePath = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostat-readings.csv";
 
 	/**
@@ -37,7 +39,7 @@ public class TMP102SensorReadingHistory
 	 */
 	public TMP102SensorReadingHistory()
 	{
-		//Do Nothing
+		//Do Nothing in the default constructor
 	}
 
 	/**
@@ -53,6 +55,7 @@ public class TMP102SensorReadingHistory
 
 	/**
 	 * Method to print to the console all of the records in the "database"
+	 * This method was previously used for debugging purposes only
 	 */
 	public void printRecords()
 	{

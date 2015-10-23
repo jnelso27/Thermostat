@@ -3,7 +3,9 @@ package application.thermostat.crc;
 /**
  * Class Description (TODO)
  *
- * @author Joshua Nelson
+ * Date:
+ *
+ * @author J Nelson
  *
  */
 public class CRC16
@@ -45,7 +47,7 @@ public class CRC16
 	}
 
 	/**
-	 * Method
+	 * Method Description
 	 *
 	 * @param data
 	 * @return

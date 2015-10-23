@@ -4,20 +4,20 @@ import application.thermostat.message.Message;
 import application.thermostat.message.MessageSender;
 import application.thermostat.message.MessageType;
 import application.thermostat.message.messages.TemperatureDangerLevelMessage;
-import application.thermostat.message.messages.TemperatureNormalLevelMessage;
 import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 
 /**
  * Class represents the three types of "Alarms".
  *
+ * Date of Last Change: 2015-10-22
  *
  * @author DeveloperMain
  *
  */
 public class AlarmSensor extends Sensor
 {
+	/** Variable Description */
 	byte data1[] = {0x00, 0x01}; //DEBUG CODE ONLY
-	byte data2[] = {0x00, 0x02}; //DEBUG CODE ONLY
 
 	/**
 	 * Default Constructor
@@ -47,6 +47,9 @@ public class AlarmSensor extends Sensor
 		//Do nothing for this sensor
 	}
 
+	/**
+	 *
+	 */
 	public void requestData(Message message)
 	{
 		if(message.getMessageType() == MessageType.NORMAL_ALARM_SET_MSG)

@@ -10,30 +10,32 @@ import java.util.logging.SimpleFormatter;
 
 import application.thermostat.Thermostat;
 
-/**
+/***
  * Class Description
  *
- * @author Joshua Nelson
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class ThermostatLogger
 {
-	//Logger
+	/** Logger */
 	public static final Logger logger = Logger.getLogger(Thermostat.class.getName());
 
-	//
+	/** Variable Description */
 	Formatter loggerFormatter = null;
 
-	//Handler for setting up the log file path
+	/** Handler for setting up the log file path */
 	Handler fileHandler;
 
-	//
+	/** Variable Description */
 	private boolean enabled = false;
 
-	//
+	/** Variable Description */
 	private int loggingLevel = 0;
 
-	//Default path of log file
+	/** Default path of log file */
 	String pathOfLogFile = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostatlog.log";
 
 	/**
@@ -60,7 +62,7 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Constructor
+	 * Constructor Description
 	 *
 	 * @param pathOfLogFile
 	 */

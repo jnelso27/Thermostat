@@ -4,9 +4,11 @@ import application.thermostat.message.Message;
 import application.thermostat.message.MessageType;
 
 /***
- * Class
+ * Class Description
  *
- * @author Joshua
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class TemperatureDangerLevelMessage extends Message

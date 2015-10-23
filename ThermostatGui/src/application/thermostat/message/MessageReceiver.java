@@ -2,46 +2,48 @@ package application.thermostat.message;
 
 import java.util.LinkedList;
 
-import application.thermostat.crc.CRC16;
-import application.thermostat.message.processor.MessageProcessor;
-import application.thermostat.sensors.Sensor;
-
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
+import application.thermostat.crc.CRC16;
+import application.thermostat.message.processor.MessageProcessor;
+import application.thermostat.sensors.Sensor;
+
 /***
  * Class used to receive a message
  *
- * @author Joshua Nelson
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class MessageReceiver
 {
-	//Instance of the SerialPort Object
+	/** Instance of the SerialPort Object */
 	private static SerialPort serialPort;
 
-	//COM Port name
+	/** COM Port name */
 	private String comPort = "COM7";
 
-	//Default Baud Rate
+	/** Default Baud Rate */
 	private final int baud_rate = 9600;
 
-	//Default Data Bits
+	/** Default Data Bits */
 	private final int data_bits = 8;
 
-	//Default Stop Bits
+	/** Default Stop Bits */
 	private final int stop_bits = 1;
 
-	//Default Parity Bits
+	/** Default Parity Bits */
 	private final int parity_bits = 0;
 
-	//
+	/** Variable Description */
 	LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
 	/**
-	 * Constructor
+	 * Constructor Description
 	 */
 	public MessageReceiver(LinkedList<Sensor> sensorSuite)
 	{
@@ -66,6 +68,12 @@ public class MessageReceiver
 		}
 	}
 
+	/**
+	 * Method Description
+	 *
+	 * @param sensorSuite
+	 * @param comPort
+	 */
 	public MessageReceiver(LinkedList<Sensor> sensorSuite, String comPort)
 	{
 		this.sensorSuite = sensorSuite;
@@ -89,6 +97,11 @@ public class MessageReceiver
 		}
 	}
 
+	/**
+	 * Method Description
+	 *
+	 * @return
+	 */
 	public static SerialPort getSerialPortInstance()
 	{
 		return serialPort;
@@ -149,22 +162,27 @@ public class MessageReceiver
 	}
 
 	/**
-	 * Method
+	 * Class Description
 	 *
-	 * @author DeveloperMain
+	 * @author J Nelson
 	 *
 	 */
 	static class SerialPortReader implements SerialPortEventListener
 	{
-		//
+		/** Variable Description */
 		boolean msgValidity;
 
-		//
+		/** Variable Description */
 		MessageProcessor msgProcessor;
 
-		//
+		/** Variable Description */
 		LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
+		/**
+		 * Method Description
+		 *
+		 * @param sensorSuite
+		 */
 		public SerialPortReader(LinkedList<Sensor> sensorSuite)
 		{
 			this.sensorSuite = sensorSuite;
@@ -172,6 +190,9 @@ public class MessageReceiver
 			msgProcessor = new MessageProcessor(this.sensorSuite);
 		}
 
+		/**
+		 * Method Description
+		 */
 	    public void serialEvent(SerialPortEvent event)
 	    {
 	        if(event.isRXCHAR())

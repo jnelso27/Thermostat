@@ -1,4 +1,4 @@
-Oct 19, 2015 8:40:16 PM application.thermostat.Thermostat <init>
+Oct 22, 2015 7:21:09 PM application.thermostat.Thermostat <init>
 SEVERE: Severe Msg Being Logged
-Oct 19, 2015 8:40:16 PM application.thermostat.xml.XMLFileLoader loadXMLConfigurationFile
+Oct 22, 2015 7:21:09 PM application.thermostat.xml.XMLFileLoader loadXMLConfigurationFile
 SEVERE: XML Settings Loaded Successfully

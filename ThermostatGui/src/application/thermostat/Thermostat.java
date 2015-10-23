@@ -1,6 +1,3 @@
-/**
- *
- */
 package application.thermostat;
 
 import java.time.LocalDateTime;
@@ -9,7 +6,6 @@ import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import application.thermostat.db.TMP102SensorReadingHistory;
 import application.thermostat.log.ThermostatLogger;
@@ -20,63 +16,62 @@ import application.thermostat.message.messages.TemperatureNormalLevelMessage;
 import application.thermostat.message.messages.TemperatureReadingRequestMsg;
 import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 import application.thermostat.sensors.AlarmLevel;
-import application.thermostat.sensors.AlarmSensor;
 import application.thermostat.sensors.Sensor;
 import application.thermostat.sensors.SensorType;
-import application.thermostat.sensors.TemperatureSensor;
 
 /**
  * Class Description
  *
+ * Date:
  *
- * @author DeveloperMain
+ * @author J Nelson
  *
  */
 public class Thermostat extends Observable
 {
-	//
+	/** Variable Description */
 	private static double currentTemperature = 0;
 
-	//
+	/** Variable Description */
 	private double highThreshold = 80;
 
-	//
+	/** Variable Description */
 	private double lowThreshold = 75;
 
-	//
+	/** Variable Description */
 	private int alarmLevel = AlarmLevel.NORMAL;
 
-	//
+	/** Variable Description */
 	private boolean temperatureUnitsInFarenheit = true;
 
-	//Temperature Sensor measurement period in milliseconds
+	/** Temperature Sensor measurement period in milliseconds */
 	private long tempSensorMeasurementPeriod = 1000;
 
-	//List of all sensors that are in the Thermostat
+	/** List of all sensors that are in the Thermostat */
 	LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
-	//Thermostat Logger
-	ThermostatLogger thermostatLogger;// = new ThermostatLogger();
+	/** Thermostat Logger */
+	ThermostatLogger thermostatLogger;
 
-	//Message receiver for incoming messages
+	/** Message receiver for incoming messages */
 	MessageReceiver messageReciever;
 
-	//MessageSender for sending messages
+	/** MessageSender for sending messages */
 	MessageSender messageSender;
 
-	//
+	/** Variable Description */
 	ScheduledExecutorService scheduledPool = null;
 
-	//
+	/** Variable Description */
 	Runnable runnabledelayedTask;
 
 	//NEED TO REMOVE, FIND A BETTER WAY...
 	byte data1[] = {0x00, 0x01}; //DEBUG CODE ONLY
 
-	//
+	/** Variable Description */
 	byte messageData[] = {'G','E'};	//temporary.
 
-	//
+	/** Variable Description */
 	private TMP102SensorReadingHistory tempDB = new TMP102SensorReadingHistory();
 
 	/**
@@ -176,16 +171,28 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 *
+	 * Method Description
 	 */
 	public void startSensorMeasurements()
 	{
-		scheduledPool = Executors.newScheduledThreadPool(1);
-		scheduledPool.scheduleWithFixedDelay(runnabledelayedTask, 1, tempSensorMeasurementPeriod, TimeUnit.MILLISECONDS);
+		if(scheduledPool == null)
+		{
+			scheduledPool = Executors.newScheduledThreadPool(1);
+			scheduledPool.scheduleWithFixedDelay(runnabledelayedTask, 1, tempSensorMeasurementPeriod, TimeUnit.MILLISECONDS);
+		}
+		else if(scheduledPool.isShutdown())
+		{
+			scheduledPool = Executors.newScheduledThreadPool(1);
+			scheduledPool.scheduleWithFixedDelay(runnabledelayedTask, 1, tempSensorMeasurementPeriod, TimeUnit.MILLISECONDS);
+		}
+		else
+		{
+			//Do Nothing
+		}
 	}
 
 	/**
-	 *
+	 * Method Description
 	 */
 	public void stopSensorMeasurements()
 	{
@@ -196,7 +203,7 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 *
+	 * Method Description
 	 *
 	 * @param temperatureReading
 	 */
@@ -228,14 +235,17 @@ public class Thermostat extends Observable
 		}
 	}
 
-	//TEST METHOD
+	/**
+	 * Method used to build the CSV file
+	 *
+	 */
 	public void printRecords()
 	{
-		//tempDB.printRecords();
 		tempDB.buildCSVFile();
 	}
 
 	/**
+	 * Method Description
 	 *
 	 */
 	public void getCurrentTemperature()
@@ -295,13 +305,18 @@ public class Thermostat extends Observable
 		return sensorSuite.size();
 	}
 
+	/**
+	 * Method Description
+	 *
+	 * @param sensor
+	 */
 	public void addSensor(Sensor sensor)
 	{
 		sensorSuite.add(sensor);
 	}
 
 	/**
-	 * Method used to ge a particular sensor by its index
+	 * Method used to get a particular sensor by its index
 	 *
 	 * @param index
 	 * @return
@@ -352,6 +367,8 @@ public class Thermostat extends Observable
 	}
 
 	/**
+	 * Method Description
+	 *
 	 * @return the temperatureUnitsInFarenheit
 	 */
 	public boolean isTemperatureUnitsInFarenheit()
@@ -360,6 +377,8 @@ public class Thermostat extends Observable
 	}
 
 	/**
+	 * Method Description
+	 *
 	 * @param temperatureUnitsInFarenheit the temperatureUnitsInFarenheit to set
 	 */
 	public void setTemperatureUnitsInFarenheit(boolean temperatureUnitsInFarenheit)

@@ -5,19 +5,29 @@ import java.time.LocalDateTime;
 /**
  * Class that represents a single TMP102 sensor record.
  *
- * @author DeveloperMain
+ * Date:
+ *
+ * @author J Nelson
  *
  */
 public class TMP102SensorRecord
 {
-	//
+	/** Variable Description */
 	private double tempMeasurement = 0.0;
 
-	//
+	/** Variable Description */
 	private LocalDateTime tempMeasurementDate;
 
 	/**
-	 * Constructor
+	 * Default Constructor
+	 */
+	public TMP102SensorRecord()
+	{
+		//Do nothing in the Default Constructor
+	}
+
+	/**
+	 * Constructor Description
 	 *
 	 * @param tempMeasurement
 	 * @param localDateTime
@@ -29,6 +39,8 @@ public class TMP102SensorRecord
 	}
 
 	/**
+	 * Method Description
+	 *
 	 * @return the tempMeasurement
 	 */
 	public double getTempMeasurement()
@@ -37,6 +49,8 @@ public class TMP102SensorRecord
 	}
 
 	/**
+	 * Method Description
+	 *
 	 * @param tempMeasurement the tempMeasurement to set
 	 */
 	public void setTempMeasurement(double tempMeasurement)
@@ -45,6 +59,8 @@ public class TMP102SensorRecord
 	}
 
 	/**
+	 * Method Description
+	 *
 	 * @return the tempMeasurementDate
 	 */
 	public LocalDateTime getTempMeasurementDate()
@@ -53,6 +69,8 @@ public class TMP102SensorRecord
 	}
 
 	/**
+	 * Method Description
+	 *
 	 * @param tempMeasurementDate the tempMeasurementDate to set
 	 */
 	public void setTempMeasurementDate(LocalDateTime tempMeasurementDate)

@@ -1,20 +1,30 @@
 package application.thermostat.sensors;
 
-/**
- * @author DeveloperMain
+/***
+ * Class Description
+ *
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class SensorType
 {
+	/** Variable Description */
 	public static final int DEFAULT = 0;
 
+	/** Variable Description */
 	public static final int TEMPERATURE = 1;
 
+	/** Variable Description */
 	public static final int LED = 2;
 
+	/** Variable Description */
 	public static final int ACCELEROMETER = 3;
 
 	/**
+	 * Method Description (DELETE IF NO LONGER USED)
+	 *
 	 * @return the default
 	 */
 	public static int getDefault()
@@ -23,6 +33,8 @@ public class SensorType
 	}
 
 	/**
+	 * Method Description (DELETE IF NO LONGER USED)
+	 *
 	 * @return the temperature
 	 */
 	public static int getTemperature()
@@ -31,6 +43,8 @@ public class SensorType
 	}
 
 	/**
+	 * Method Description (DELETE IF NO LONGER USED)
+	 *
 	 * @return the led
 	 */
 	public static int getLed()
@@ -39,7 +53,7 @@ public class SensorType
 	}
 
 	/**
-	 * @return the accelerometer
+	 * @return the accelerometer (DELETE IF NO LONGER USED)
 	 */
 	public static int getAccelerometer()
 	{

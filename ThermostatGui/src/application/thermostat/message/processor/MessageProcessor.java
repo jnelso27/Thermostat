@@ -9,15 +9,17 @@ import application.thermostat.sensors.Sensor;
 /***
  * Class is used to process incoming messages from the thermistat
  *
- * @author Joshua Nelson
+ * Date of Last Change: 2015-10-22
+ *
+ * @author J Nelson
  *
  */
 public class MessageProcessor
 {
-	//
+	/** Variable Description */
 	LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
-	//Generic Sensor
+	/** Variable Description */
 	Sensor sensor = new Sensor();
 
 	/**
