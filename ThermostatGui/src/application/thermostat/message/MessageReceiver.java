@@ -28,22 +28,22 @@ public class MessageReceiver
 	private String comPort = "COM7";
 
 	/** Default Baud Rate */
-	private final int baud_rate = 9600;
+	private int baudRate = 9600;
 
 	/** Default Data Bits */
-	private final int data_bits = 8;
+	private int dataBits = 8;
 
 	/** Default Stop Bits */
-	private final int stop_bits = 1;
+	private int stopBits = 1;
 
 	/** Default Parity Bits */
-	private final int parity_bits = 0;
+	private int parityBits = 0;
 
 	/** Variable Description */
 	LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
 	/**
-	 * Constructor Description
+	 * Constructor
 	 */
 	public MessageReceiver(LinkedList<Sensor> sensorSuite)
 	{
@@ -56,7 +56,7 @@ public class MessageReceiver
 		try
 		{
 			serialPort.openPort();
-			serialPort.setParams(baud_rate, data_bits, stop_bits, parity_bits);
+			serialPort.setParams(baudRate, dataBits, stopBits, parityBits);
 			serialPort.setEventsMask(mask);
 			serialPort.addEventListener(new SerialPortReader(this.sensorSuite));
 
@@ -85,7 +85,7 @@ public class MessageReceiver
 		try
 		{
 			serialPort.openPort();
-			serialPort.setParams(baud_rate, data_bits, stop_bits, parity_bits);
+			serialPort.setParams(baudRate, dataBits, stopBits, parityBits);
 			serialPort.setEventsMask(mask);
 			serialPort.addEventListener(new SerialPortReader(this.sensorSuite));
 
@@ -98,7 +98,7 @@ public class MessageReceiver
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain the serial port
 	 *
 	 * @return
 	 */
@@ -108,16 +108,103 @@ public class MessageReceiver
 	}
 
 	/**
-	 * Constructor - Future Implementation
+	 * Method used to obtain the name of the COM port
 	 *
-	 * @param baud
-	 * @param data_bits
-	 * @param stop_bits
-	 * @param parity
+	 * @return the comPort
 	 */
-	public MessageReceiver(int baud, int data_bits, int stop_bits, int parity)
+	public String getComPort()
 	{
-		//Future Implementation
+		return comPort;
+	}
+
+	/**
+	 * Method used to set the name of the COM port
+	 *
+	 * @param comPort the comPort to set
+	 */
+	public void setComPort(String comPort)
+	{
+		this.comPort = comPort;
+	}
+
+	/**
+	 * Method used to obtain the currently set baud rate
+	 *
+	 * @return the baudRate
+	 */
+	public int getBaudRate()
+	{
+		return baudRate;
+	}
+
+	/**
+	 * Method used to set the baud rate
+	 *
+	 * @param baudRate the baudRate to set
+	 */
+	public void setBaudRate(int baudRate)
+	{
+		this.baudRate = baudRate;
+	}
+
+	/**
+	 * Method used to obtain the currently set data bits
+	 *
+	 * @return the dataBits
+	 */
+	public int getDataBits()
+	{
+		return dataBits;
+	}
+
+	/**
+	 * Method used to set the data bits for the serial port
+	 *
+	 * @param dataBits the dataBits to set
+	 */
+	public void setDataBits(int dataBits)
+	{
+		this.dataBits = dataBits;
+	}
+
+	/**
+	 * Method used to obtain the currently set stop bits for the serial port
+	 *
+	 * @return the stopBits
+	 */
+	public int getStopBits()
+	{
+		return stopBits;
+	}
+
+	/**
+	 * Method used to set the number of stop bits for the serial port
+	 *
+	 * @param stopBits the stopBits to set
+	 */
+	public void setStopBits(int stopBits)
+	{
+		this.stopBits = stopBits;
+	}
+
+	/**
+	 * Method used to obtain the number of currently set parity bits of the serial port
+	 *
+	 * @return the parityBits
+	 */
+	public int getParityBits()
+	{
+		return parityBits;
+	}
+
+	/**
+	 * Method used to set the number of parity bits for the serial port
+	 *
+	 * @param parityBits the parityBits to set
+	 */
+	public void setParityBits(int parityBits)
+	{
+		this.parityBits = parityBits;
 	}
 
 	/**
@@ -145,7 +232,7 @@ public class MessageReceiver
 
 			System.out.println("calculatedMessageCRC: "+ calculatedMessageCRC);
 
-			//Convert Received Message CRC to int for comparison
+			//Convert Received Message CRC to integer for comparison
 			int receivedMessageCRC = receivedMessage[Message.REC_MSG_CRCBYTE1_NDX] &0xFF;
 			receivedMessageCRC <<= 8;
 			receivedMessageCRC |= receivedMessage[Message.REC_MSG_CRCBYTE2_NDX] & 0xFF;
