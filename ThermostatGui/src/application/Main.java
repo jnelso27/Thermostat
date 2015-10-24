@@ -16,14 +16,12 @@ import javafx.scene.chart.XYChart;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.util.concurrent.ExecutorService;
 import java.io.File;
 import java.util.Observable;
 
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -31,6 +29,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -92,9 +91,6 @@ public class Main extends Application
     /** Used for the Graph */
     NumberAxis yAxis1 = new NumberAxis();
     final LineChart<Number, Number> lineChart1 = new LineChart<Number, Number>(series1XAxis, yAxis1);
-
-    /** Comment */
-    private ExecutorService executor;
 
     /** Comment */
     Tab settingsTab = new Tab();
@@ -178,7 +174,6 @@ public class Main extends Application
                 	}
                 }
            });
-
         });
 
         //Add menu to the GUI
@@ -192,6 +187,9 @@ public class Main extends Application
         //Set preferred height/width for the pane
         borderPane.prefHeightProperty().bind(scene.heightProperty());
         borderPane.prefWidthProperty().bind(scene.widthProperty());
+
+        //Set where users can't accidentally close the tabs
+        tabPane.tabClosingPolicyProperty().set(TabClosingPolicy.UNAVAILABLE);
 
         //Add the menubar and tabPane
         borderPane.setTop(menuBar);
@@ -207,7 +205,6 @@ public class Main extends Application
         primaryStage.show();
     }
 
-
     @Override
     public void start(Stage stage)
     {
@@ -219,39 +216,21 @@ public class Main extends Application
     }
 
     /**
-     * Method
+     * Method Description
      */
     private void prepareTimeline()
     {
     	graphTimer.start();
     }
 
+    /**
+     * Method Description
+     *
+     * @param numPoints
+     */
     private void changeGraph(int numPoints)
     {
-    	System.out.println("Called changeGraph()------------------------------------------");
-
-    	//if(numPoints )
-    	//{
-    		graphTimeSetting = numPoints;
-    	//}
-		/*
-    	lineChart1.getData().removeAll(series1);
-    	hbox3.getChildren().remove(lineChart1);
-
-    	series1XAxis.setLowerBound(0);
-        series1XAxis.setUpperBound(500);
-        //series1XAxis.setScaleX(NUM_SECONDS_IN_ONE_WEEK);
-       // lineChart1.getData().
-        //lineChart1.getData().
-        lineChart1.getData().addAll(series1);
-
-
-        hbox3.getChildren().add(lineChart1);
-        hbox3.setAlignment(Pos.CENTER);
-        tab3.setContent(hbox3);
-
-       // hbox3.getChildren().remove(lineChart1);
-	*/
+    	graphTimeSetting = numPoints;
     }
 
     /**
@@ -260,33 +239,6 @@ public class Main extends Application
     private void addDataToSeries1()
     {
     	series1XAxis.setLowerBound(xSeries1Data - graphTimeSetting );
-        series1XAxis.setUpperBound(xSeries1Data - 1);
-    }
-
-    /**
-     * Method used to setup the chart for temperature over the last 60 minutes
-     */
-    private void addDataToSeries2()
-    {
-    	series1XAxis.setLowerBound(xSeries1Data - NUM_SECONDS_IN_ONE_HOUR );
-        series1XAxis.setUpperBound(xSeries1Data - 1);
-    }
-
-    /**
-     * Method used to setup the chart for temperature over the last 24 hours
-     */
-    private void addDataToSeries3()
-    {
-    	series1XAxis.setLowerBound(xSeries1Data - NUM_SECONDS_IN_ONE_DAY );
-        series1XAxis.setUpperBound(xSeries1Data - 1);
-    }
-
-    /**
-     * Method used to setup the chart for temperature over the last week
-     */
-    private void addDataToSeries4()
-    {
-        series1XAxis.setLowerBound(xSeries1Data - NUM_SECONDS_IN_ONE_WEEK );
         series1XAxis.setUpperBound(xSeries1Data - 1);
     }
 
@@ -541,7 +493,7 @@ public class Main extends Application
                     }
             });
 
-
+        //
         currentTabVBoxContainer.getChildren().add(farenheitRadioButton);
         currentTabVBoxContainer.getChildren().add(celciusRadioButton);
 
