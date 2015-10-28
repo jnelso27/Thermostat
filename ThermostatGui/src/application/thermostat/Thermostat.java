@@ -89,7 +89,8 @@ public class Thermostat extends Observable
 	 * @param lowThreshold The value to set for the low threshold temperature
 	 * @param tempUnits
 	 */
-	public Thermostat(double highThreshold, double lowThreshold, boolean temperatureUnitsInFarenheit, LinkedList<Sensor> sensorSuite, ThermostatLogger logger)
+	public Thermostat(double highThreshold, double lowThreshold, boolean temperatureUnitsInFarenheit, LinkedList<Sensor> sensorSuite,
+			String comPort, ThermostatLogger logger)
 	{
 		this.highThreshold = highThreshold;
 		this.lowThreshold = lowThreshold;
@@ -101,7 +102,7 @@ public class Thermostat extends Observable
 		//thermostatLogger = new ThermostatLogger();
 
 		//Create RS232 Message Receiver and Sender
-		messageReciever = new MessageReceiver(sensorSuite,"COM7");
+		messageReciever = new MessageReceiver(sensorSuite, comPort);
 		messageSender = new MessageSender();
 
 		//Start sensor measurements
@@ -236,10 +237,9 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 * Method used to build the CSV file
-	 *
+	 * Method used to save the record history
 	 */
-	public void printRecords()
+	public void saveRecords()
 	{
 		tempDB.buildCSVFile();
 	}
@@ -384,5 +384,45 @@ public class Thermostat extends Observable
 	public void setTemperatureUnitsInFarenheit(boolean temperatureUnitsInFarenheit)
 	{
 		this.temperatureUnitsInFarenheit = temperatureUnitsInFarenheit;
+	}
+
+	/**
+	 * Method used to obtain the Thermostat logger
+	 *
+	 * @return the thermostatLogger
+	 */
+	public ThermostatLogger getThermostatLogger()
+	{
+		return thermostatLogger;
+	}
+
+	/**
+	 * Method used to set the logger for the Thermostat
+	 *
+	 * @param thermostatLogger the thermostatLogger to set
+	 */
+	public void setThermostatLogger(ThermostatLogger thermostatLogger)
+	{
+		this.thermostatLogger = thermostatLogger;
+	}
+
+	/**
+	 * Method used to obtain the MessageReciever of the Thermostat
+	 *
+	 * @return the messageReciever
+	 */
+	public MessageReceiver getMessageReciever()
+	{
+		return messageReciever;
+	}
+
+	/**
+	 * Message used to set the MessageReceiver of the Thermostat
+	 *
+	 * @param messageReciever the messageReciever to set
+	 */
+	public void setMessageReciever(MessageReceiver messageReciever)
+	{
+		this.messageReciever = messageReciever;
 	}
 }

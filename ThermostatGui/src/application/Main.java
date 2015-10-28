@@ -21,15 +21,19 @@ import java.util.Observable;
 
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -138,6 +142,8 @@ public class Main extends Application
     /** Comment */
     HBox hbox3 = new HBox();
 
+
+    static TextArea testField = new TextArea();
     /**
      * Method Description
      *
@@ -147,6 +153,8 @@ public class Main extends Application
     {
     	//Load Configuration File and Add Observers
     	thermostat = configurationFileLoader.loadXMLConfigurationFile();
+
+    	//Platform.s
 
     	//Setup the primary stage
     	primaryStage.setTitle("Thermostat");
@@ -191,9 +199,17 @@ public class Main extends Application
         //Set where users can't accidentally close the tabs
         tabPane.tabClosingPolicyProperty().set(TabClosingPolicy.UNAVAILABLE);
 
+        //
+        testField.setPrefHeight(100);
+        testField.prefWidthProperty().bind(scene.widthProperty());
+        ScrollPane sp = new ScrollPane();
+        sp.setContent(testField);
+        testField.setVisible(true);
+
         //Add the menubar and tabPane
         borderPane.setTop(menuBar);
         borderPane.setCenter(tabPane);
+        borderPane.setBottom(sp);
 
         //Add the borderpane object to the primary GUI
         root.getChildren().add(borderPane);
@@ -284,6 +300,14 @@ public class Main extends Application
                 fileChooser.setTitle("Open XML Settings File");
                 File file = fileChooser.showOpenDialog(primaryStage);
 
+                if(file != null)
+                {
+                	configurationFileLoader.setDefaultFilePath(file.getAbsolutePath());
+                	thermostat = configurationFileLoader.loadXMLConfigurationFile();
+                	updateSettingsTab();
+                	System.out.println("Loaded Successfully!");
+                }
+
                 //This is the section that call needs to be made to load
                 System.out.println("You selected: "+ file.getAbsolutePath());
             }
@@ -294,17 +318,15 @@ public class Main extends Application
     	{
             public void handle(ActionEvent t)
             {
-                System.out.println("Save XML Settings was selected!");
-                //TODO: Add code to save the current XML Settings
-
-                FileChooser saveFileChooser = new FileChooser();
+            	FileChooser saveFileChooser = new FileChooser();
                 saveFileChooser.setTitle("Save Application XML Settings File");
                 File file = saveFileChooser.showSaveDialog(primaryStage);
 
-                configureationFileSaver.buildXMLConfigurationFile(thermostat, file.getAbsolutePath());
-
-                //This is the section that call needs to be made to load
-                System.out.println("You selected: "+ file.getAbsolutePath());
+                if(file != null)
+                {
+                	configureationFileSaver.buildXMLConfigurationFile(thermostat, file.getAbsolutePath());
+                	System.out.println("You selected: "+ file.getAbsolutePath());
+                }
             }
         });
 
@@ -313,9 +335,8 @@ public class Main extends Application
     	{
             public void handle(ActionEvent t)
             {
-                System.out.println("Export to CSV");
                 thermostat.stopSensorMeasurements();
-                thermostat.printRecords();
+                thermostat.saveRecords();
             }
         });
 
@@ -324,7 +345,6 @@ public class Main extends Application
     	{
             public void handle(ActionEvent t)
             {
-                System.out.println("Exit");
                 thermostat.stopSensorMeasurements();
                 Platform.exit();
             }
@@ -431,6 +451,13 @@ public class Main extends Application
             			thermostat.setHighThreshold(highThreshold);
             			thermostat.setLowThreshold(lowThreshold);
             		}
+            		else
+            		{
+            			Alert errorAlert = new Alert(AlertType.ERROR);
+            			errorAlert.setTitle("GooblyGoop!");
+            			errorAlert.setContentText("Hey");
+            			errorAlert.showAndWait();
+            		}
             	}
             	catch(NumberFormatException exception)
             	{
@@ -441,11 +468,13 @@ public class Main extends Application
 
         settingsVBox.getChildren().add(settingsApplyButton);
 
+        //Add current settings into the textfields, etc.
+        updateSettingsTab();
+
         settingsVBox.setAlignment(Pos.TOP_LEFT);
         settingsTab.setContent(settingsVBox);
         tabPane.getTabs().add(settingsTab);
     }
-
 
     /**
      * Method used to build the "Current" tab of the application GUI
@@ -524,7 +553,8 @@ public class Main extends Application
         lineChart1.setAnimated(false);
         lineChart1.setTitle("Temperature vs. Time");
         lineChart1.setHorizontalGridLinesVisible(true);
-        lineChart1.setPrefWidth(780);
+        lineChart1.prefHeightProperty().bind(scene.heightProperty());
+        lineChart1.prefWidthProperty().bind(scene.widthProperty());
 
         // Set Name for Series
         series1.setName("TMP102 Reading");
@@ -536,6 +566,46 @@ public class Main extends Application
         hbox3.setAlignment(Pos.CENTER);
         tab3.setContent(hbox3);
         tabPane.getTabs().add(tab3);
+    }
+
+    /**
+     * Method used to update and load information into the GUI components of the
+     * Settings tab.
+     */
+    private void updateSettingsTab()
+    {
+    	highThresholdTextField.setText(Double.toString(thermostat.getHighThreshold()));
+    	lowThresholdTextField.setText(Double.toString(thermostat.getLowThreshold()));
+    }
+
+    /**
+     * Method Description
+     *
+     * @param messageToDisplay The message to display on the error dialog box
+     */
+    public static void showErrorDialog(String messageToDisplay)
+    {
+    	System.out.println("In showErrorDialog()");
+    	testField.appendText(messageToDisplay);
+
+    	Platform.runLater(new Runnable()
+    	{
+            @Override
+            public void run()
+            {
+		    	try
+		    	{
+		    		Alert errorAlert = new Alert(AlertType.ERROR);
+		    		errorAlert.setTitle("Error");
+		    		errorAlert.setContentText(messageToDisplay);
+		    		errorAlert.showAndWait();
+		    	}
+		    	catch(Exception e)
+		    	{
+		    		System.out.println(e);
+		    	}
+            }
+        });
     }
 
     /**

@@ -42,7 +42,6 @@ public abstract class Message
 	/** Variable Description */
 	private byte messagePayload[] = {'0','0','0'};
 
-
 	/**
 	 * Default Constructor
 	 */

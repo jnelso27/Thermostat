@@ -22,9 +22,11 @@ import application.thermostat.sensors.SensorType;
 import application.thermostat.sensors.TemperatureSensor;
 
 /***
- * Class Description
+ * Class used to load the application settings XML file. Class is responsible initializing the
+ * Thermostat and ThermostatLogger objects as well as building the sensor list from
+ * the XML file.
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-10-23
  *
  * @author J Nelson
  *
@@ -34,11 +36,14 @@ public class XMLFileLoader
 	/** Thermostat object to load settings to */
 	Thermostat thermostat = null;
 
-	/** Variable Description */
+	/** Application logger */
 	ThermostatLogger logger = null;
 
 	/** List of Sensors to Build */
 	LinkedList<Sensor> listOfSensors = new LinkedList<Sensor>();
+
+	/** Default Filepath of the XML File to load */
+    String defaultFilePath = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostat-config-settings.xml";
 
 	/**
 	 * Default Constructor
@@ -59,8 +64,7 @@ public class XMLFileLoader
 	    DocumentBuilder builder = null;
 	    Document document = null;
 
-	    //Filepath of the XML File to load
-	    String defaultFilePath = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostat-config-settings.xml";
+
 
 	    //High threshold for alarm functionality
 	    double highThreshold = 0.0;
@@ -81,7 +85,7 @@ public class XMLFileLoader
         String loggingPath = "";
 
         //Represents the default COM port
-        int comPort = 7;
+        String comPort = "COM7";
 
 		try
 		{
@@ -128,10 +132,10 @@ public class XMLFileLoader
 	              System.out.println("Load XML Settings-Loading Logging Level Of:" + loggingLevel);
 	              loggingPath =  elem.getElementsByTagName("LoggingPath").item(0).getChildNodes().item(0).getNodeValue();
 	              System.out.println("Load XML Settings-Setting LoggingPath To:" + loggingPath);
-	              comPort =  Integer.parseInt(elem.getElementsByTagName("ComPort").item(0).getChildNodes().item(0).getNodeValue());
+	              comPort =  elem.getElementsByTagName("ComPort").item(0).getChildNodes().item(0).getNodeValue();
 	              System.out.println("Load XML Settings-Loading Com Port setting:" + comPort);
 	         }
-	         if(node.getNodeName() == "Sensor") //Test Test
+	         if(node.getNodeName() == "Sensor")
 	         {
 	        	 System.out.println("Load XML Settings-Sensor");
 
@@ -161,14 +165,33 @@ public class XMLFileLoader
 	         }
 	    }
 
-	    System.out.println("Creating new thermostat object");
 	    logger = new ThermostatLogger(loggingPath, loggingEnabled, loggingLevel);
-        thermostat = new Thermostat(highThreshold, lowThreshold, tempUnits, listOfSensors, logger);
+        thermostat = new Thermostat(highThreshold, lowThreshold, tempUnits, listOfSensors, comPort, logger);
 
 	    thermostat.addSensorObservers();
 
 	    ThermostatLogger.logger.severe("XML Settings Loaded Successfully");
 
 	    return thermostat;
+	}
+
+	/**
+	 * Method used to obtain the default file path of the XML Settings File
+	 *
+	 * @return the defaultFilePath
+	 */
+	public String getDefaultFilePath()
+	{
+		return defaultFilePath;
+	}
+
+	/**
+	 * Method used to set the default file path for loading of the XML Settings file
+	 *
+	 * @param defaultFilePath the defaultFilePath to set
+	 */
+	public void setDefaultFilePath(String defaultFilePath)
+	{
+		this.defaultFilePath = defaultFilePath;
 	}
 }

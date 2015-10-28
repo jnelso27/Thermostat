@@ -67,15 +67,19 @@ public class XMLFileBuilder
 			applicationSettings.appendChild(temperatureUnitsInFarenheit);
 
 			Element loggingEnabled = doc.createElement("LoggingEnabled");
-			loggingEnabled.appendChild(doc.createTextNode("false"));
+			loggingEnabled.appendChild(doc.createTextNode(Boolean.toString(thermostat.getThermostatLogger().isEnabled())));
 			applicationSettings.appendChild(loggingEnabled);
 
 			Element loggingLevel = doc.createElement("LoggingLevel");
-			loggingLevel.appendChild(doc.createTextNode("0"));
+			loggingLevel.appendChild(doc.createTextNode(Integer.toString(thermostat.getThermostatLogger().getLoggingLevel())));
 			applicationSettings.appendChild(loggingLevel);
 
+			Element loggingPath = doc.createElement("LoggingPath");
+			loggingPath.appendChild(doc.createTextNode(thermostat.getThermostatLogger().getPathOfLogFile()));
+			applicationSettings.appendChild(loggingPath);
+
 			Element comPort = doc.createElement("ComPort");
-			comPort.appendChild(doc.createTextNode("7"));
+			comPort.appendChild(doc.createTextNode(thermostat.getMessageReciever().getComPort()));
 			applicationSettings.appendChild(comPort);
 
 			//Now loop through the sensorlist
@@ -85,15 +89,15 @@ public class XMLFileBuilder
 				rootElement.appendChild(sensor);
 
 				Element sensorName = doc.createElement("SensorName");
-				sensorName.appendChild(doc.createTextNode(thermostat.getSensor(i).getSensorName()));		//Will need to grab the high threshold value from thermostat
+				sensorName.appendChild(doc.createTextNode(thermostat.getSensor(i).getSensorName()));
 				sensor.appendChild(sensorName);
 
 				Element sensorType = doc.createElement("SensorType");
-				sensorType.appendChild(doc.createTextNode(String.valueOf(thermostat.getSensor(i).getSensorType())));		//Will need to grab the low threshold value from thermostat
+				sensorType.appendChild(doc.createTextNode(String.valueOf(thermostat.getSensor(i).getSensorType())));
 				sensor.appendChild(sensorType);
 
 				Element testingFlag = doc.createElement("TestingFlag");
-				testingFlag.appendChild(doc.createTextNode(String.valueOf(thermostat.getSensor(i).getSensorType())));		//Will need to grab the temp units value from thermostat
+				testingFlag.appendChild(doc.createTextNode(String.valueOf(thermostat.getSensor(i).getSensorType())));
 				sensor.appendChild(testingFlag);
 			}
 

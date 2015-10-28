@@ -9,9 +9,9 @@ import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 /**
  * Class represents the three types of "Alarms".
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-10-23
  *
- * @author DeveloperMain
+ * @author J Nelson
  *
  */
 public class AlarmSensor extends Sensor

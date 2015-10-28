@@ -1,15 +1,23 @@
 package application.thermostat.message;
 
 import java.util.LinkedList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
+import application.Main;
 import application.thermostat.crc.CRC16;
 import application.thermostat.message.processor.MessageProcessor;
 import application.thermostat.sensors.Sensor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /***
  * Class used to receive a message
@@ -77,6 +85,7 @@ public class MessageReceiver
 	public MessageReceiver(LinkedList<Sensor> sensorSuite, String comPort)
 	{
 		this.sensorSuite = sensorSuite;
+		this.comPort = comPort;
 		serialPort = new SerialPort(comPort);
 
 		//Set the mask
@@ -265,6 +274,26 @@ public class MessageReceiver
 		/** Variable Description */
 		LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
+		/** Period to wait for message before assuming an error has occurred */
+		private int receivedMessageTimeOutPeriod = 30;
+
+		/** Callable object used as a timer */
+		Callable messageNotReceivedTask = new Callable()
+		{
+			@Override
+			public Object call() throws Exception
+			{
+				Main.showErrorDialog("No messages received in the last 30 seconds");
+				return "Message Not Received in the last 30 seconds!";
+			}
+		};
+
+		/** Variable Description */
+		ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(1);
+
+		/** Variable Description */
+		ScheduledFuture sf = scheduledPool.schedule(messageNotReceivedTask, receivedMessageTimeOutPeriod, TimeUnit.SECONDS);
+
 		/**
 		 * Method Description
 		 *
@@ -284,6 +313,10 @@ public class MessageReceiver
 	    {
 	        if(event.isRXCHAR())
 	        {
+	        	//Message has been received so restart the "timer"
+	        	sf.cancel(true);
+	        	sf = scheduledPool.schedule(messageNotReceivedTask, receivedMessageTimeOutPeriod, TimeUnit.SECONDS);
+
 	            if(event.getEventValue() == Message.MESSAGE_SIZE)
 	            {
 	                try
@@ -297,6 +330,9 @@ public class MessageReceiver
 		                	if(msgValidity)
 		                	{
 		                		System.out.println("Received Message with Good CRC. Processing Msg");
+
+		                		//Put code here to reset the task
+
 		                		msgProcessor.processMessage(buffer);
 		                	}
 		                	else

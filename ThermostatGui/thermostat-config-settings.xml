@@ -2,12 +2,12 @@
 <ThermostatSettings>
 	<ApplicationSettings>
 		<Highthreshold>80.0</Highthreshold>
-		<Lowthreshold>75.0</Lowthreshold>	
+		<Lowthreshold>75.0</Lowthreshold>
 		<TemperatureUnitsInFarenheit>true</TemperatureUnitsInFarenheit>
 		<LoggingEnabled>true</LoggingEnabled>
-		<LoggingLevel>1</LoggingLevel>		
+		<LoggingLevel>1</LoggingLevel>
 		<LoggingPath>C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostatlog.log</LoggingPath>
-		<ComPort>7</ComPort>	
+		<ComPort>COM7</ComPort>
 	</ApplicationSettings>
 	<Sensor>
 		<SensorName>TemperatureSensor1</SensorName>
@@ -18,5 +18,5 @@
 		<SensorName>AlarmSensor1</SensorName>
 		<SensorType>2</SensorType>
 		<TestingFlag>false</TestingFlag>
-	</Sensor>	
+	</Sensor>
 </ThermostatSettings>

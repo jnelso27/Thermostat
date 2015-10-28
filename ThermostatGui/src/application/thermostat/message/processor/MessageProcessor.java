@@ -37,7 +37,7 @@ public class MessageProcessor
 	 */
 	public void processMessage(byte[] serialMessage)
 	{
-		if(serialMessage[MessageConstants.REC_MSG_TYPE_NDX] == MessageType.TEMP_SENSOR_READING_MSG)
+		if(serialMessage[MessageConstants.REC_MSG_TYPE_NDX] == MessageType.TEMP_SENSOR_READING_MSG) //maybe try typeOf/instanceOf here
 		{
 			System.out.println("Received a TEMP_SENSOR_READING_MSG");
 			sensor = sensorSuite.get(0);

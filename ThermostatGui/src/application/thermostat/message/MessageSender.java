@@ -40,6 +40,7 @@ public class MessageSender
 		}
 		catch(SerialPortException ex)
 		{
+			System.out.print("BisonMeat!");
 			ThermostatLogger.logger.severe("The Exception: " + ex + "Has Occurred");
 		}
 	}
