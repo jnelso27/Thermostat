@@ -18,9 +18,6 @@ public abstract class Message
 	/** Character representing the end of the message */
 	public static byte messageFooter = '$';
 
-	/** Variable Description */
-	public byte messageType = MessageType.DEFAULT_MSG;
-
 	/** Message Indexes */
 	public static final int REC_MSG_HEADER_NDX = 0;
 	public static final int REC_MSG_TYPE_NDX = 1;
@@ -30,16 +27,22 @@ public abstract class Message
 	public static final int REC_MSG_CRCBYTE2_NDX = 5;
 	public static final int REC_MSG_FOOTER_NDX = 6;
 
-	/** Message Size */
+	/** Size of the message */
 	public static final int MESSAGE_SIZE = 7;
 
-	/** Variable Description */
-	public byte messageData[] = {'A','A'};
+	/** Indexes used for message */
+	private final int MSG_MSB = 0;
+	private final int MSG_LSB = 1;
+	private final int BYTE_SIZE_IN_BITS = 8;
 
-	/** Variable Description */
+	/** Byte array that represents the full message */
 	private byte message[] = {'0','0','0','0','0','0','0'};
 
-	/** Variable Description */
+	/** Payload portion of the message
+	 *  Byte[0] = Message Type
+	 *  Byte[1] = MSB of the MSG Data
+	 *  Byte[2] = LSB of the MSG Data
+	 */
 	private byte messagePayload[] = {'0','0','0'};
 
 	/**
@@ -51,20 +54,21 @@ public abstract class Message
 	}
 
 	/**
-	 * Constructor Description
+	 * Overloaded Constructor
+	 * Used to construct a message object for sending
 	 *
-	 * @param messageType
-	 * @param messageData
+	 * @param messageType The type of message to construct
+	 * @param messageData The message data. Should be a byte array of size 2.
 	 */
-	public Message(byte messageType, byte[] messageData2)
+	public Message(byte messageType, byte[] messageData)
 	{
 		this.message[REC_MSG_HEADER_NDX] = messageHeader;
 		this.message[REC_MSG_TYPE_NDX] = messageType;
-		this.message[REC_MSG_DATA_MSB_NDX] = messageData2[0];
-		this.message[REC_MSG_DATA_LSB_NDX] = messageData2[1];
+		this.message[REC_MSG_DATA_MSB_NDX] = messageData[MSG_MSB];
+		this.message[REC_MSG_DATA_LSB_NDX] = messageData[MSG_LSB];
 		this.message[REC_MSG_FOOTER_NDX] = messageFooter;
 
-		//Save the message payload portion
+		//Save the message payload portion for passing to the CRC Generator
 		this.messagePayload[0] = this.message[REC_MSG_TYPE_NDX];
 		this.messagePayload[1] = this.message[REC_MSG_DATA_MSB_NDX];
 		this.messagePayload[2] = this.message[REC_MSG_DATA_LSB_NDX];
@@ -72,38 +76,9 @@ public abstract class Message
 		//Calculate the CRC and add to the appropriate message fields
 		int crc = CRC16.calculateCRCCCITTXModem(messagePayload);
 
-		this.message[REC_MSG_CRCBYTE1_NDX] = (byte) (crc >> 8);	//Get first byte from the integer
+		//Add CRC to the message
+		this.message[REC_MSG_CRCBYTE1_NDX] = (byte) (crc >> BYTE_SIZE_IN_BITS);	//Get first byte from the integer
 		this.message[REC_MSG_CRCBYTE2_NDX] = (byte) (crc);		//Get second byte from the integer
-
-	}
-
-	/**
-	 * Method Description
-	 *
-	 * @param messageType
-	 * @param messageData2
-	 * @return
-	 */
-	public byte[] buildMessage(byte messageType, byte[] messageData2)
-	{
-		this.message[REC_MSG_HEADER_NDX] = messageHeader;
-		this.message[REC_MSG_TYPE_NDX] = messageType;
-		this.message[REC_MSG_DATA_MSB_NDX] = messageData2[0];
-		this.message[REC_MSG_DATA_LSB_NDX] = messageData2[1];
-		this.message[REC_MSG_FOOTER_NDX] = messageFooter;
-
-		//Save the message payload portion
-		this.messagePayload[0] = this.message[REC_MSG_TYPE_NDX];
-		this.messagePayload[1] = this.message[REC_MSG_DATA_MSB_NDX];
-		this.messagePayload[2] = this.message[REC_MSG_DATA_LSB_NDX];
-
-		//Calculate the CRC and add to the appropriate message fields
-		int crc = CRC16.calculateCRCCCITTXModem(messagePayload);
-
-		this.message[REC_MSG_CRCBYTE1_NDX] = (byte) (crc >> 8);	//Get first byte from the integer
-		this.message[REC_MSG_CRCBYTE2_NDX] = (byte) (crc);		//Get second byte from the integer
-
-		return message;
 	}
 
 	/**

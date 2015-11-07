@@ -28,6 +28,7 @@ public class TemperatureNormalLevelMessage extends Message
 	 */
 	public TemperatureNormalLevelMessage(byte[] messageData)
 	{
-		super.buildMessage(MessageType.NORMAL_ALARM_SET_MSG, messageData);
+		//super.buildMessage(MessageType.NORMAL_ALARM_SET_MSG, messageData);
+		super(MessageType.NORMAL_ALARM_SET_MSG, messageData);
 	}
 }

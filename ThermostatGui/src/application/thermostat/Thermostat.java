@@ -13,7 +13,7 @@ import application.thermostat.message.MessageReceiver;
 import application.thermostat.message.MessageSender;
 import application.thermostat.message.messages.TemperatureDangerLevelMessage;
 import application.thermostat.message.messages.TemperatureNormalLevelMessage;
-import application.thermostat.message.messages.TemperatureReadingRequestMsg;
+import application.thermostat.message.messages.TemperatureReadingRequestMessage;
 import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 import application.thermostat.sensors.AlarmLevel;
 import application.thermostat.sensors.Sensor;
@@ -250,7 +250,7 @@ public class Thermostat extends Observable
 	 */
 	public void getCurrentTemperature()
 	{
-		messageSender.sendMessage(new TemperatureReadingRequestMsg(messageData));
+		messageSender.sendMessage(new TemperatureReadingRequestMessage(messageData));
 	}
 
 	/**

@@ -11,12 +11,12 @@ import application.thermostat.message.MessageType;
  * @author J Nelson
  *
  */
-public class TemperatureReadingRequestMsg extends Message
+public class TemperatureReadingRequestMessage extends Message
 {
 	/**
 	 * Default Constructor
 	 */
-	public TemperatureReadingRequestMsg()
+	public TemperatureReadingRequestMessage()
 	{
 
 	}
@@ -26,8 +26,9 @@ public class TemperatureReadingRequestMsg extends Message
 	 *
 	 * @param messageData
 	 */
-	public TemperatureReadingRequestMsg(byte[] messageData)
+	public TemperatureReadingRequestMessage(byte[] messageData)
 	{
-		super.buildMessage(MessageType.TEMP_SENSOR_READING_REQUEST_MSG, messageData);
+		//super.buildMessage(MessageType.TEMP_SENSOR_READING_REQUEST_MSG, messageData);
+		super(MessageType.TEMP_SENSOR_READING_REQUEST_MSG, messageData);
 	}
 }

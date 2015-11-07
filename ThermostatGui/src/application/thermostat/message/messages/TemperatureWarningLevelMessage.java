@@ -28,6 +28,7 @@ public class TemperatureWarningLevelMessage extends Message
 	 */
 	public TemperatureWarningLevelMessage(byte[] messageData)
 	{
-		super.buildMessage(MessageType.WARNING_ALARM_SET_MSG, messageData);
+		//super.buildMessage(MessageType.WARNING_ALARM_SET_MSG, messageData);
+		super(MessageType.WARNING_ALARM_SET_MSG, messageData);
 	}
 }

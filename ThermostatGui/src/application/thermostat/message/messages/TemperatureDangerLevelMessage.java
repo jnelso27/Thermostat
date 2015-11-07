@@ -28,6 +28,7 @@ public class TemperatureDangerLevelMessage extends Message
 	 */
 	public TemperatureDangerLevelMessage(byte[] messageData)
 	{
-		super.buildMessage(MessageType.DANGER_ALARM_SET_MSG, messageData);
+		//super.buildMessage(MessageType.DANGER_ALARM_SET_MSG, messageData);
+		super(MessageType.DANGER_ALARM_SET_MSG, messageData);
 	}
 }
