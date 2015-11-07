@@ -4,6 +4,7 @@ import application.thermostat.message.Message;
 import application.thermostat.message.MessageSender;
 import application.thermostat.message.MessageType;
 import application.thermostat.message.messages.TemperatureDangerLevelMessage;
+import application.thermostat.message.messages.TemperatureNormalLevelMessage;
 import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 
 /**
@@ -16,6 +17,11 @@ import application.thermostat.message.messages.TemperatureWarningLevelMessage;
  */
 public class AlarmSensor extends Sensor
 {
+	/** Used to request what type of alarms to set */
+	public static int NORMAL_ALARM_REQUEST = 0;
+	public static int WARNING_ALARM_REQUEST = 1;
+	public static int DANGER_ALARM_REQUEST = 2;
+
 	/** Variable Description */
 	byte data1[] = {0x00, 0x01}; //DEBUG CODE ONLY
 
@@ -47,9 +53,7 @@ public class AlarmSensor extends Sensor
 		//Do nothing for this sensor
 	}
 
-	/**
-	 *
-	 */
+	/*
 	public void requestData(Message message)
 	{
 		if(message.getMessageType() == MessageType.NORMAL_ALARM_SET_MSG)
@@ -67,6 +71,28 @@ public class AlarmSensor extends Sensor
 		else
 		{
 			System.out.println("Don't know how to process a: " + message.getMessageType() + " type of message");
+		}
+	}
+	*/
+
+	@Override
+	public void requestData(int request)
+	{
+		if(request == NORMAL_ALARM_REQUEST)
+		{
+			requestAlarmLow();
+		}
+		else if(request == WARNING_ALARM_REQUEST)
+		{
+			requestAlarmMed();
+		}
+		else if(request == DANGER_ALARM_REQUEST)
+		{
+			requestAlarmHigh();
+		}
+		else
+		{
+			System.out.println("Don't know how to process");
 		}
 	}
 
@@ -91,6 +117,6 @@ public class AlarmSensor extends Sensor
 	 */
 	public void requestAlarmLow()
 	{
-
+		MessageSender.sendMessage(new TemperatureNormalLevelMessage(data1));
 	}
 }

@@ -1,6 +1,9 @@
 package application.thermostat.sensors;
 
 import application.thermostat.message.Message;
+import application.thermostat.message.MessageSender;
+import application.thermostat.message.messages.TemperatureDangerLevelMessage;
+import application.thermostat.message.messages.TemperatureReadingRequestMessage;
 
 /***
  * Class Description
@@ -12,6 +15,9 @@ import application.thermostat.message.Message;
  */
 public class TemperatureSensor extends Sensor
 {
+	/** Used to request a temperature reading */
+	public static int TEMPERATURE_READING_REQUEST = 0;
+
 	/** Temperature in Degrees Celcius */
 	public double temp_in_celcius = 0;
 
@@ -65,5 +71,21 @@ public class TemperatureSensor extends Sensor
 		int convertedTemp = ((message[Message.REC_MSG_DATA_MSB_NDX] << 4) + (message[Message.REC_MSG_DATA_LSB_NDX] >> 4));
 
 		return convertedTemp*0.0625;
+	}
+
+	@Override
+	public void requestData(int request)
+	{
+		if(request == TEMPERATURE_READING_REQUEST)
+		{
+			requestTemperature();
+		}
+	}
+
+	private void requestTemperature()
+	{
+		byte messageData[] = {'G','E'};
+
+		MessageSender.sendMessage(new TemperatureReadingRequestMessage(messageData));
 	}
 }

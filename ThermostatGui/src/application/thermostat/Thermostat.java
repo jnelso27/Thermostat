@@ -16,8 +16,10 @@ import application.thermostat.message.messages.TemperatureNormalLevelMessage;
 import application.thermostat.message.messages.TemperatureReadingRequestMessage;
 import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 import application.thermostat.sensors.AlarmLevel;
+import application.thermostat.sensors.AlarmSensor;
 import application.thermostat.sensors.Sensor;
 import application.thermostat.sensors.SensorType;
+import application.thermostat.sensors.TemperatureSensor;
 
 /**
  * Class Description
@@ -68,8 +70,7 @@ public class Thermostat extends Observable
 	//NEED TO REMOVE, FIND A BETTER WAY...
 	byte data1[] = {0x00, 0x01}; //DEBUG CODE ONLY
 
-	/** Variable Description */
-	byte messageData[] = {'G','E'};	//temporary.
+
 
 	/** Variable Description */
 	private TMP102SensorReadingHistory tempDB = new TMP102SensorReadingHistory();
@@ -215,7 +216,7 @@ public class Thermostat extends Observable
 			if(alarmLevel != AlarmLevel.NORMAL)
 			{
 				System.out.println("temperatureReading <= lowThreshold at: "+temperatureReading);
-				getSensor(1).requestData(new TemperatureNormalLevelMessage(data1));
+				getSensor(1).requestData(AlarmSensor.NORMAL_ALARM_REQUEST);
 				alarmLevel = AlarmLevel.NORMAL;
 			}
 		}
@@ -223,15 +224,15 @@ public class Thermostat extends Observable
 		{
 			if(alarmLevel != AlarmLevel.WARNING)
 			{
-			System.out.println("temperatureReading > lowThreshold && temperatureReading < highThreshold at: "+temperatureReading);
-			getSensor(1).requestData(new TemperatureWarningLevelMessage(data1));
-			alarmLevel = AlarmLevel.WARNING;
+				System.out.println("temperatureReading > lowThreshold && temperatureReading < highThreshold at: "+temperatureReading);
+				getSensor(1).requestData(AlarmSensor.WARNING_ALARM_REQUEST);
+				alarmLevel = AlarmLevel.WARNING;
 			}
 		}
 		else
 		{
 			System.out.println("temperatureReading > highThreshold at: "+temperatureReading);
-			getSensor(1).requestData(new TemperatureDangerLevelMessage(data1));
+			getSensor(1).requestData(AlarmSensor.DANGER_ALARM_REQUEST);
 			alarmLevel = AlarmLevel.DANGER;
 		}
 	}
@@ -250,7 +251,7 @@ public class Thermostat extends Observable
 	 */
 	public void getCurrentTemperature()
 	{
-		messageSender.sendMessage(new TemperatureReadingRequestMessage(messageData));
+		getSensor(0).requestData(TemperatureSensor.TEMPERATURE_READING_REQUEST);
 	}
 
 	/**

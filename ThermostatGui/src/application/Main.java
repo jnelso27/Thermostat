@@ -15,6 +15,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import jssc.SerialPortException;
 
 import java.io.File;
 import java.util.Observable;
@@ -43,6 +44,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import application.thermostat.Thermostat;
+import application.thermostat.message.MessageReceiver;
 import application.thermostat.xml.XMLFileBuilder;
 import application.thermostat.xml.XMLFileLoader;
 
@@ -346,6 +348,17 @@ public class Main extends Application
             public void handle(ActionEvent t)
             {
                 thermostat.stopSensorMeasurements();
+
+                try
+                {
+					MessageReceiver.getSerialPortInstance().closePort();
+				}
+                catch (SerialPortException e)
+                {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
                 System.out.println("Exiting");
                 Platform.exit();
             }

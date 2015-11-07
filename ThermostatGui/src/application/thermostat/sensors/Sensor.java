@@ -50,7 +50,7 @@ public class Sensor extends Observable
 
 	}
 
-	public void requestData(Message message)
+	public void requestData(int request)
 	{
 
 	}
