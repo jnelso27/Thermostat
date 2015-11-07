@@ -346,6 +346,7 @@ public class Main extends Application
             public void handle(ActionEvent t)
             {
                 thermostat.stopSensorMeasurements();
+                System.out.println("Exiting");
                 Platform.exit();
             }
         });

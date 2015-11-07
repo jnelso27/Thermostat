@@ -1,6 +1,6 @@
 package application.thermostat.sensors;
 
-import application.thermostat.message.constants.MessageConstants;
+import application.thermostat.message.Message;
 
 /***
  * Class Description
@@ -62,7 +62,7 @@ public class TemperatureSensor extends Sensor
 	 */
 	public double getTemperatureInCelcius(byte[] message)
 	{
-		int convertedTemp = ((message[MessageConstants.REC_MSG_DATA_MSB_NDX] << 4) + (message[MessageConstants.REC_MSG_DATA_LSB_NDX] >> 4));
+		int convertedTemp = ((message[Message.REC_MSG_DATA_MSB_NDX] << 4) + (message[Message.REC_MSG_DATA_LSB_NDX] >> 4));
 
 		return convertedTemp*0.0625;
 	}
