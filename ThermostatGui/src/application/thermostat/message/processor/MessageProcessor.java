@@ -7,7 +7,7 @@ import application.thermostat.message.MessageType;
 import application.thermostat.sensors.Sensor;
 
 /***
- * Class is used to process incoming messages from the thermistat
+ * Class is used to process incoming messages from the thermostat
  *
  * Date of Last Change: 2015-10-22
  *

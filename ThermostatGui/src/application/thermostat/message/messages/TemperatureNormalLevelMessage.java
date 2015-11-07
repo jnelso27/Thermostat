@@ -6,7 +6,7 @@ import application.thermostat.message.MessageType;
 /***
  * Class Description
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-07
  *
  * @author J Nelson
  *
@@ -31,7 +31,6 @@ public class TemperatureNormalLevelMessage extends Message
 	 */
 	public TemperatureNormalLevelMessage(byte[] messageData)
 	{
-		//super.buildMessage(MessageType.NORMAL_ALARM_SET_MSG, messageData);
 		super(MessageType.NORMAL_ALARM_SET_MSG, messageData);
 	}
 }

@@ -2,7 +2,6 @@ package application.thermostat.sensors;
 
 import application.thermostat.message.Message;
 import application.thermostat.message.MessageSender;
-import application.thermostat.message.messages.TemperatureDangerLevelMessage;
 import application.thermostat.message.messages.TemperatureReadingRequestMessage;
 
 /***

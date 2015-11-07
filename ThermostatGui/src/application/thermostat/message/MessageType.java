@@ -2,9 +2,9 @@ package application.thermostat.message;
 
 /***
  * Class represents the various types of messages that can be sent or
- * received between the Thermistat and Computer
+ * received between the Thermostat and Computer
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-07
  *
  * @author J Nelson
  *

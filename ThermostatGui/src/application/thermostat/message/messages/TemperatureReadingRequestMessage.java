@@ -6,7 +6,7 @@ import application.thermostat.message.MessageType;
 /***
  * Class Description
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-07
  *
  * @author J Nelson
  *
@@ -28,7 +28,6 @@ public class TemperatureReadingRequestMessage extends Message
 	 */
 	public TemperatureReadingRequestMessage(byte[] messageData)
 	{
-		//super.buildMessage(MessageType.TEMP_SENSOR_READING_REQUEST_MSG, messageData);
 		super(MessageType.TEMP_SENSOR_READING_REQUEST_MSG, messageData);
 	}
 }

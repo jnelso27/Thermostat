@@ -53,28 +53,6 @@ public class AlarmSensor extends Sensor
 		//Do nothing for this sensor
 	}
 
-	/*
-	public void requestData(Message message)
-	{
-		if(message.getMessageType() == MessageType.NORMAL_ALARM_SET_MSG)
-		{
-			MessageSender.sendMessage(message);
-		}
-		else if(message.getMessageType() == MessageType.WARNING_ALARM_SET_MSG)
-		{
-			MessageSender.sendMessage(message);
-		}
-		else if(message.getMessageType() == MessageType.DANGER_ALARM_SET_MSG)
-		{
-			MessageSender.sendMessage(message);
-		}
-		else
-		{
-			System.out.println("Don't know how to process a: " + message.getMessageType() + " type of message");
-		}
-	}
-	*/
-
 	@Override
 	public void requestSensorData(int request)
 	{
@@ -99,27 +77,24 @@ public class AlarmSensor extends Sensor
 	/**
 	 * Method used to request the DANGER level alarm
 	 */
-	public void requestAlarmHigh()
+	private void requestAlarmHigh()
 	{
-		//MessageSender.sendMessage(new TemperatureDangerLevelMessage(data1));
 		MessageSender.sendMessage(new TemperatureDangerLevelMessage());
 	}
 
 	/**
 	 * Method used to request the WARNING level alarm
 	 */
-	public void requestAlarmMed()
+	private void requestAlarmMed()
 	{
-		//MessageSender.sendMessage(new TemperatureWarningLevelMessage(data1));
 		MessageSender.sendMessage(new TemperatureWarningLevelMessage());
 	}
 
 	/**
 	 * Method used to request the NORMAL level alarm
 	 */
-	public void requestAlarmLow()
+	private void requestAlarmLow()
 	{
-		//MessageSender.sendMessage(new TemperatureNormalLevelMessage(data1));
 		MessageSender.sendMessage(new TemperatureNormalLevelMessage());
 	}
 }
