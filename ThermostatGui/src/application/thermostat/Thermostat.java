@@ -216,7 +216,7 @@ public class Thermostat extends Observable
 			if(alarmLevel != AlarmLevel.NORMAL)
 			{
 				System.out.println("temperatureReading <= lowThreshold at: "+temperatureReading);
-				getSensor(1).requestData(AlarmSensor.NORMAL_ALARM_REQUEST);
+				getSensor(1).requestSensorData(AlarmSensor.NORMAL_ALARM_REQUEST);
 				alarmLevel = AlarmLevel.NORMAL;
 			}
 		}
@@ -225,14 +225,14 @@ public class Thermostat extends Observable
 			if(alarmLevel != AlarmLevel.WARNING)
 			{
 				System.out.println("temperatureReading > lowThreshold && temperatureReading < highThreshold at: "+temperatureReading);
-				getSensor(1).requestData(AlarmSensor.WARNING_ALARM_REQUEST);
+				getSensor(1).requestSensorData(AlarmSensor.WARNING_ALARM_REQUEST);
 				alarmLevel = AlarmLevel.WARNING;
 			}
 		}
 		else
 		{
 			System.out.println("temperatureReading > highThreshold at: "+temperatureReading);
-			getSensor(1).requestData(AlarmSensor.DANGER_ALARM_REQUEST);
+			getSensor(1).requestSensorData(AlarmSensor.DANGER_ALARM_REQUEST);
 			alarmLevel = AlarmLevel.DANGER;
 		}
 	}
@@ -251,7 +251,7 @@ public class Thermostat extends Observable
 	 */
 	public void getCurrentTemperature()
 	{
-		getSensor(0).requestData(TemperatureSensor.TEMPERATURE_READING_REQUEST);
+		getSensor(0).requestSensorData(TemperatureSensor.TEMPERATURE_READING_REQUEST);
 	}
 
 	/**

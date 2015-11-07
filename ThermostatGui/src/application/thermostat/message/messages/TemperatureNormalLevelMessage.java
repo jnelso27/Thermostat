@@ -13,12 +13,15 @@ import application.thermostat.message.MessageType;
  */
 public class TemperatureNormalLevelMessage extends Message
 {
+	/** Default Message Data */
+	public static byte defaultMessageData[] = {0x00, 0x01};
+
 	/**
 	 * Default Constructor
 	 */
 	public TemperatureNormalLevelMessage()
 	{
-		//Do Nothing
+		super(MessageType.NORMAL_ALARM_SET_MSG, defaultMessageData);
 	}
 
 	/**

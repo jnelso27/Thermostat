@@ -1,28 +1,25 @@
-/**
- *
- */
 package application.thermostat.sensors;
 
 /**
- * Class represents the different levels of alarms for the thermistat
+ * Class represents the different levels of alarms for the thermostat
  *
  * DANGER(RED)    : Temperature is above the high threshold mark
  * WARNING(YELLOW): Temperature is below the high threshold mark but above the low threshold mark
  * NORMAL (GREEN) : Temperature is below or at the low threshold mark
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-07
  *
- * @author Joshua Nelson
+ * @author J Nelson
  *
  */
 public class AlarmLevel
 {
-	/** Variable Description */
+	/** Represents the state of the alarm when the temperature is below or at the low threshold */
 	public static final int NORMAL = 0;
 
-	/** Variable Description */
+	/** Represents the state of the alarm when the temperature is below the high threshold but above the low threshold */
 	public static final int WARNING = 1;
 
-	/** Variable Description */
+	/** Represents the state of the alarm when the temperature is above the high threshold */
 	public static final int DANGER = 2;
 }

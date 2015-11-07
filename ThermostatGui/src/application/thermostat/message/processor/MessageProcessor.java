@@ -41,7 +41,7 @@ public class MessageProcessor
 		{
 			System.out.println("Received a TEMP_SENSOR_READING_MSG");
 			sensor = sensorSuite.get(0);
-			sensor.processReading(serialMessage);
+			sensor.processSensorData(serialMessage);
 		}
 		else
 		{

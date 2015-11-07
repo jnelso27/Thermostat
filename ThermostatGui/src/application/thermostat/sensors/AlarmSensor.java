@@ -1,16 +1,21 @@
 package application.thermostat.sensors;
 
-import application.thermostat.message.Message;
 import application.thermostat.message.MessageSender;
-import application.thermostat.message.MessageType;
 import application.thermostat.message.messages.TemperatureDangerLevelMessage;
 import application.thermostat.message.messages.TemperatureNormalLevelMessage;
 import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 
 /**
- * Class represents the three types of "Alarms".
+ * Class represents an Alarm (LED) Sensor.
+ * Provides multiple static variables for which calling objects should use for the specific
+ * types of requests to be made. For the Alarm Sensor, there are currently three types of
+ * requests to be called:
  *
- * Date of Last Change: 2015-10-23
+ * NORMAL_ALARM_REQUEST: Request to set the Normal Alarm
+ * WARNING_ALARM_REQUEST: Request to set the Warning Alarm
+ * DANGER_ALARM_REQUEST: Request to set the Danger Alarm
+ *
+ * Date of Last Change: 2015-11-07
  *
  * @author J Nelson
  *
@@ -21,9 +26,6 @@ public class AlarmSensor extends Sensor
 	public static int NORMAL_ALARM_REQUEST = 0;
 	public static int WARNING_ALARM_REQUEST = 1;
 	public static int DANGER_ALARM_REQUEST = 2;
-
-	/** Variable Description */
-	byte data1[] = {0x00, 0x01}; //DEBUG CODE ONLY
 
 	/**
 	 * Default Constructor
@@ -36,19 +38,17 @@ public class AlarmSensor extends Sensor
 	/**
 	 * Overloaded Constructor
 	 *
-	 * @param sensorName
-	 * @param sensorType
-	 * @param testingFlag
+	 * @param sensorName The name of the sensor
+	 * @param sensorType The type of sensor to create
+	 * @param testingFlag The testing flag. Set to "true" to put sensor in testing mode
 	 */
 	public AlarmSensor(String sensorName,int sensorType, boolean testingFlag)
 	{
 		super(sensorName, sensorType, testingFlag);
 	}
 
-	/**
-	 *
-	 */
-	public void processReading(byte[] message)
+	@Override
+	public void processSensorData(byte[] message)
 	{
 		//Do nothing for this sensor
 	}
@@ -76,7 +76,7 @@ public class AlarmSensor extends Sensor
 	*/
 
 	@Override
-	public void requestData(int request)
+	public void requestSensorData(int request)
 	{
 		if(request == NORMAL_ALARM_REQUEST)
 		{
@@ -101,7 +101,8 @@ public class AlarmSensor extends Sensor
 	 */
 	public void requestAlarmHigh()
 	{
-		MessageSender.sendMessage(new TemperatureDangerLevelMessage(data1));
+		//MessageSender.sendMessage(new TemperatureDangerLevelMessage(data1));
+		MessageSender.sendMessage(new TemperatureDangerLevelMessage());
 	}
 
 	/**
@@ -109,7 +110,8 @@ public class AlarmSensor extends Sensor
 	 */
 	public void requestAlarmMed()
 	{
-		MessageSender.sendMessage(new TemperatureWarningLevelMessage(data1));
+		//MessageSender.sendMessage(new TemperatureWarningLevelMessage(data1));
+		MessageSender.sendMessage(new TemperatureWarningLevelMessage());
 	}
 
 	/**
@@ -117,6 +119,7 @@ public class AlarmSensor extends Sensor
 	 */
 	public void requestAlarmLow()
 	{
-		MessageSender.sendMessage(new TemperatureNormalLevelMessage(data1));
+		//MessageSender.sendMessage(new TemperatureNormalLevelMessage(data1));
+		MessageSender.sendMessage(new TemperatureNormalLevelMessage());
 	}
 }

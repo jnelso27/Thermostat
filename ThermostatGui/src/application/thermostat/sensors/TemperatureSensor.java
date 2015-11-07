@@ -44,8 +44,8 @@ public class TemperatureSensor extends Sensor
 		super(sensorName, sensorType, testingFlag);
 	}
 
-	//@Override
-	public void processReading(byte[] message)
+	@Override
+	public void processSensorData(byte[] message)
 	{
 		//Code to save off the temperature
 
@@ -66,7 +66,7 @@ public class TemperatureSensor extends Sensor
 	 * @param message
 	 * @return
 	 */
-	public double getTemperatureInCelcius(byte[] message)
+	private double getTemperatureInCelcius(byte[] message)
 	{
 		int convertedTemp = ((message[Message.REC_MSG_DATA_MSB_NDX] << 4) + (message[Message.REC_MSG_DATA_LSB_NDX] >> 4));
 
@@ -74,7 +74,7 @@ public class TemperatureSensor extends Sensor
 	}
 
 	@Override
-	public void requestData(int request)
+	public void requestSensorData(int request)
 	{
 		if(request == TEMPERATURE_READING_REQUEST)
 		{

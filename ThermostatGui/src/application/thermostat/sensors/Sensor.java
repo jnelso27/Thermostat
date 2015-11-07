@@ -2,25 +2,24 @@ package application.thermostat.sensors;
 
 import java.util.Observable;
 
-import application.thermostat.message.Message;
-
 /***
- * Class Description
+ * Class represents a generic sensor object. All sensors should be subclasses of the Sensor
+ * class.
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-07
  *
  * @author J Nelson
  *
  */
 public class Sensor extends Observable
 {
-	//Name of the Sensor
+	/** Name of the Sensor */
 	public String sensorName = "";
 
-	//Type of Sensor
+	/** Type of Sensor */
 	public int sensorType = SensorType.DEFAULT;
 
-	//Testing flag used to simulated sensor functionality for testing purposes
+	/** Testing flag used to simulated sensor functionality for testing purposes */
 	public boolean testingFlag = true;
 
 	/**
@@ -30,8 +29,9 @@ public class Sensor extends Observable
 	{
 		//Do Nothing
 	}
+
 	/**
-	 * Constructor
+	 * Overloaded Constructor
 	 *
 	 * @param sensorName The name of the sensor
 	 * @param sensorType The type of sensor
@@ -44,19 +44,30 @@ public class Sensor extends Observable
 		this.testingFlag = testingFlag;
 	}
 
-	//Do nothing right now
-	public void processReading(byte[] message)
-	{
-
-	}
-
-	public void requestData(int request)
+	/**
+	 * Method Description
+	 *
+	 * @param message
+	 */
+	public void processSensorData(byte[] message)
 	{
 
 	}
 
 	/**
-	 * @return the sensorName
+	 * Method Description
+	 *
+	 * @param request
+	 */
+	public void requestSensorData(int request)
+	{
+
+	}
+
+	/**
+	 * Method used to obtain the name of the sensor
+	 *
+	 * @return
 	 */
 	public String getSensorName()
 	{
@@ -64,6 +75,8 @@ public class Sensor extends Observable
 	}
 
 	/**
+	 * Method used to set the name of the sensor
+	 *
 	 * @param sensorName the sensorName to set
 	 */
 	public void setSensorName(String sensorName)
@@ -72,6 +85,8 @@ public class Sensor extends Observable
 	}
 
 	/**
+	 * Method used to obtain the type of the sensor
+	 *
 	 * @return the sensorType
 	 */
 	public int getSensorType()
@@ -80,6 +95,8 @@ public class Sensor extends Observable
 	}
 
 	/**
+	 * Method used to set the type of the sensor
+	 *
 	 * @param sensorType the sensorType to set
 	 */
 	public void setSensorType(int sensorType)
@@ -88,6 +105,8 @@ public class Sensor extends Observable
 	}
 
 	/**
+	 * Method used to obtain whether the sensor is in test mode
+	 *
 	 * @return the testingFlag
 	 */
 	public boolean isTestingFlag()
@@ -96,6 +115,8 @@ public class Sensor extends Observable
 	}
 
 	/**
+	 * Method used to set the sensor test flag
+	 *
 	 * @param testingFlag the testingFlag to set
 	 */
 	public void setTestingFlag(boolean testingFlag)
