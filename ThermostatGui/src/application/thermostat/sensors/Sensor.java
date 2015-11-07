@@ -45,29 +45,33 @@ public class Sensor extends Observable
 	}
 
 	/**
-	 * Method Description
+	 * Method used to process an incoming message from the sensor.
+	 * All subclasses should implement their specific logic based upon
+	 * the sensor message.
 	 *
-	 * @param message
+	 * @param message The message to process
 	 */
 	public void processSensorData(byte[] message)
 	{
-
+		//Logic to be implemented by subclasses
 	}
 
 	/**
-	 * Method Description
+	 * Method used to request data from the sensor.
+	 * All subclasses should implement their specific logic based upon the
+	 * types of requests to be made on that specific sensor.
 	 *
-	 * @param request
+	 * @param request the request for data to be sent to the sensor
 	 */
 	public void requestSensorData(int request)
 	{
-
+		//To be implemented by subclasses
 	}
 
 	/**
 	 * Method used to obtain the name of the sensor
 	 *
-	 * @return
+	 * @return the name of the sensor
 	 */
 	public String getSensorName()
 	{
@@ -77,7 +81,7 @@ public class Sensor extends Observable
 	/**
 	 * Method used to set the name of the sensor
 	 *
-	 * @param sensorName the sensorName to set
+	 * @param sensorName the name of the sensor
 	 */
 	public void setSensorName(String sensorName)
 	{
@@ -87,7 +91,7 @@ public class Sensor extends Observable
 	/**
 	 * Method used to obtain the type of the sensor
 	 *
-	 * @return the sensorType
+	 * @return the sensor type
 	 */
 	public int getSensorType()
 	{
@@ -97,7 +101,7 @@ public class Sensor extends Observable
 	/**
 	 * Method used to set the type of the sensor
 	 *
-	 * @param sensorType the sensorType to set
+	 * @param sensorType the type of sensor
 	 */
 	public void setSensorType(int sensorType)
 	{
@@ -107,7 +111,7 @@ public class Sensor extends Observable
 	/**
 	 * Method used to obtain whether the sensor is in test mode
 	 *
-	 * @return the testingFlag
+	 * @return the status of whether the sensor is in testing mode
 	 */
 	public boolean isTestingFlag()
 	{
@@ -117,7 +121,7 @@ public class Sensor extends Observable
 	/**
 	 * Method used to set the sensor test flag
 	 *
-	 * @param testingFlag the testingFlag to set
+	 * @param testingFlag the testing flag to set
 	 */
 	public void setTestingFlag(boolean testingFlag)
 	{
