@@ -1,8 +1,8 @@
 package application.thermostat.sensors;
 
 import application.thermostat.message.MessageSender;
-import application.thermostat.message.messages.TemperatureDangerLevelMessage;
-import application.thermostat.message.messages.TemperatureNormalLevelMessage;
+import application.thermostat.message.messages.RequestSetTempDangerLevelMsg;
+import application.thermostat.message.messages.RequestSetTempNormalLevelMsg;
 import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 
 /**
@@ -79,7 +79,7 @@ public class AlarmSensor extends Sensor
 	 */
 	private void requestAlarmHigh()
 	{
-		MessageSender.sendMessage(new TemperatureDangerLevelMessage());
+		MessageSender.sendMessage(new RequestSetTempDangerLevelMsg());
 	}
 
 	/**
@@ -95,6 +95,6 @@ public class AlarmSensor extends Sensor
 	 */
 	private void requestAlarmLow()
 	{
-		MessageSender.sendMessage(new TemperatureNormalLevelMessage());
+		MessageSender.sendMessage(new RequestSetTempNormalLevelMsg());
 	}
 }

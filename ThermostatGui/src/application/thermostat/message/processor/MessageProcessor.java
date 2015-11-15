@@ -2,8 +2,8 @@ package application.thermostat.message.processor;
 
 import java.util.LinkedList;
 
-import application.thermostat.message.Message;
-import application.thermostat.message.MessageType;
+import application.thermostat.message.messages.Message;
+import application.thermostat.message.messages.MessageType;
 import application.thermostat.sensors.Sensor;
 
 /***
@@ -17,10 +17,10 @@ import application.thermostat.sensors.Sensor;
 public class MessageProcessor
 {
 	/** Variable Description */
-	LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
+	private LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
 	/** Variable Description */
-	Sensor sensor = new Sensor();
+	private Sensor sensor = new Sensor();
 
 	/**
 	 * Default Constructor
@@ -37,7 +37,7 @@ public class MessageProcessor
 	 */
 	public void processMessage(byte[] serialMessage)
 	{
-		if(serialMessage[Message.REC_MSG_TYPE_NDX] == MessageType.TEMP_SENSOR_READING_MSG) //maybe try typeOf/instanceOf here
+		if(serialMessage[Message.REC_MSG_TYPE_NDX] == MessageType.TEMP_SENSOR_READING_MSG)
 		{
 			System.out.println("Received a TEMP_SENSOR_READING_MSG");
 			sensor = sensorSuite.get(0);

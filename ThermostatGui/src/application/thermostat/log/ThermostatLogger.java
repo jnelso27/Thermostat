@@ -11,7 +11,7 @@ import java.util.logging.SimpleFormatter;
 import application.thermostat.Thermostat;
 
 /***
- * Class Description
+ * Logger for logging messages of various levels.
  *
  * Date of Last Change: 2015-10-22
  *
@@ -23,20 +23,20 @@ public class ThermostatLogger
 	/** Logger */
 	public static final Logger logger = Logger.getLogger(Thermostat.class.getName());
 
-	/** Variable Description */
-	Formatter loggerFormatter = null;
+	/** Formatter for the logger output */
+	private Formatter loggerFormatter = null;
 
 	/** Handler for setting up the log file path */
-	Handler fileHandler;
+	private Handler fileHandler;
 
-	/** Variable Description */
+	/** Represents whether the logger is enabled or not */
 	private boolean enabled = false;
 
-	/** Variable Description */
+	/** Represents the logging level for the logger */
 	private int loggingLevel = 0;
 
 	/** Default path of log file */
-	String pathOfLogFile = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostatlog.log";
+	private String pathOfLogFile = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostatlog.log";
 
 	/**
 	 * Default Constructor
@@ -62,9 +62,11 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Constructor Description
+	 * Overloaded Constructor
 	 *
-	 * @param pathOfLogFile
+	 * @param pathOfLogFile The path to save the log file.
+	 * @param enabled Determines whether the Logger is enabled or not.
+	 * @param level The level of logging information to save.
 	 */
 	public ThermostatLogger(String pathOfLogFile, boolean enabled, int level)
 	{

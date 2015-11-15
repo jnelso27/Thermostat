@@ -12,32 +12,32 @@ import java.util.List;
  * Class used to write the TMP102Sensor Records. Currently implemented to write to a simple LinkedList and then
  * save to a normal text file upon command.
  *
- * Date: 2015
+ * Date of Last Change: 2015-11-14
  *
- * @author Joshua Nelson
+ * @author J Nelson
  *
  */
-public class TMP102SensorReadingHistory
+public class TemperatureSensorData
 {
 	/** List of temperature sensor records */
-	List<TMP102SensorRecord> tempReading = new LinkedList<TMP102SensorRecord>();
+	private List<TemperatureSensorRecord> tempReading = new LinkedList<TemperatureSensorRecord>();
 
 	/** File for writing to */
-	File file = null;
+	private File file = null;
 
 	/** FileWriter for writing to */
-	FileWriter fileWriter = null;
+	private FileWriter fileWriter = null;
 
 	/** Variable Description */
-	PrintWriter printWriter = null;
+	private PrintWriter printWriter = null;
 
 	/** Default Path of the file to export to */
-	String filePath = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostat-readings.csv";
+	private String filePath = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostat-readings.csv";
 
 	/**
 	 * Default constructor
 	 */
-	public TMP102SensorReadingHistory()
+	public TemperatureSensorData()
 	{
 		//Do Nothing in the default constructor
 	}
@@ -50,7 +50,7 @@ public class TMP102SensorReadingHistory
 	 */
 	public void addRecord(double tempMeasurement, LocalDateTime localDateTime)
 	{
-		tempReading.add(new TMP102SensorRecord(tempMeasurement, localDateTime));
+		tempReading.add(new TemperatureSensorRecord(tempMeasurement, localDateTime));
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class TMP102SensorReadingHistory
 	 */
 	public void printRecords()
 	{
-		for(int i=0;i<tempReading.size();i++)
+		for(int i=0; i<tempReading.size(); i++)
 		{
 			System.out.println(tempReading.get(i));
 		}
@@ -77,7 +77,7 @@ public class TMP102SensorReadingHistory
 	    	fileWriter = new FileWriter(file, true);
 	        printWriter = new PrintWriter(fileWriter);
 
-	        for(int i=0;i<tempReading.size();i++)
+	        for(int i=0; i<tempReading.size(); i++)
 			{
 	        	printWriter.append(tempReading.get(i).getTempMeasurementDate().toString() + ","+tempReading.get(i).getTempMeasurement()+"\n");
 			}
@@ -94,7 +94,7 @@ public class TMP102SensorReadingHistory
 	/**
 	 * Method used to build the CSV file of temperature records
 	 *
-	 * @param pathOfFile
+	 * @param pathOfFile The path of the file
 	 */
 	public void buildCSVFile(String pathOfFile)
 	{
@@ -105,7 +105,7 @@ public class TMP102SensorReadingHistory
 	    	fileWriter = new FileWriter(file, true);
 	        printWriter = new PrintWriter(fileWriter);
 
-	        for(int i=0;i<tempReading.size();i++)
+	        for(int i=0; i<tempReading.size(); i++)
 			{
 	        	printWriter.append(tempReading.get(i).getTempMeasurementDate().toString() + ","+tempReading.get(i).getTempMeasurement()+"\n");
 			}

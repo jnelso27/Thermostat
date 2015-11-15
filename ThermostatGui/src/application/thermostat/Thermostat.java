@@ -7,14 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import application.thermostat.db.TMP102SensorReadingHistory;
+import application.thermostat.db.TemperatureSensorData;
 import application.thermostat.log.ThermostatLogger;
 import application.thermostat.message.MessageReceiver;
 import application.thermostat.message.MessageSender;
-import application.thermostat.message.messages.TemperatureDangerLevelMessage;
-import application.thermostat.message.messages.TemperatureNormalLevelMessage;
-import application.thermostat.message.messages.TemperatureReadingRequestMessage;
-import application.thermostat.message.messages.TemperatureWarningLevelMessage;
 import application.thermostat.sensors.AlarmLevel;
 import application.thermostat.sensors.AlarmSensor;
 import application.thermostat.sensors.Sensor;
@@ -22,58 +18,59 @@ import application.thermostat.sensors.SensorType;
 import application.thermostat.sensors.TemperatureSensor;
 
 /**
- * Class Description
+ * Primary backend class that represents the Thermostat system minus the GUI.
+ * Contains multiple objects and attributes to support the frontend Graphical
+ * User Interface (GUI).
  *
- * Date:
+ * Date of Last Change: 2015-11-10
  *
  * @author J Nelson
  *
  */
 public class Thermostat extends Observable
 {
-	/** Variable Description */
+	/** Index of configured TMP102 Sensor */
+	private final int TMP102_SENSOR = 0;
+
+	/** Index of configured alarm (LED) Sensor */
+	private final int ALARM_SENSOR = 1;
+
+	/** Current measured temperature */
 	private static double currentTemperature = 0;
 
-	/** Variable Description */
+	/** Configured high threshold value used for activation of WARNING/DANGER alarm indicators */
 	private double highThreshold = 80;
 
-	/** Variable Description */
+	/** Configured low threshold value used for activation of NORMAL/WARNING alarm indicators */
 	private double lowThreshold = 75;
 
-	/** Variable Description */
+	/** The current activated alarm level indicator */
 	private int alarmLevel = AlarmLevel.NORMAL;
 
-	/** Variable Description */
+	/** Used for displaying whether temperature is in Farenheit or Celcius */
 	private boolean temperatureUnitsInFarenheit = true;
 
 	/** Temperature Sensor measurement period in milliseconds */
 	private long tempSensorMeasurementPeriod = 1000;
 
-	/** List of all sensors that are in the Thermostat */
-	LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
+	/** List of all sensors that are in the Thermostat per XML Settings File */
+	private LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
-	/** Thermostat Logger */
-	ThermostatLogger thermostatLogger;
+	/** Thermostat Logger for debugging */
+	private ThermostatLogger thermostatLogger;
 
 	/** Message receiver for incoming messages */
-	MessageReceiver messageReciever;
+	private MessageReceiver messageReciever;
 
-	/** MessageSender for sending messages */
-	MessageSender messageSender;
+	/** Message sender for sending messages */
+	private MessageSender messageSender;
 
-	/** Variable Description */
-	ScheduledExecutorService scheduledPool = null;
+	/** Used for starting and stopping sensor measurements */
+	private ScheduledExecutorService scheduledMeasurementService = null;
+	private Runnable sensorMeasurementsTask;
 
-	/** Variable Description */
-	Runnable runnabledelayedTask;
-
-	//NEED TO REMOVE, FIND A BETTER WAY...
-	byte data1[] = {0x00, 0x01}; //DEBUG CODE ONLY
-
-
-
-	/** Variable Description */
-	private TMP102SensorReadingHistory tempDB = new TMP102SensorReadingHistory();
+	/** "Database" for saving temperature data */
+	private TemperatureSensorData tempDB = new TemperatureSensorData();
 
 	/**
 	 * Default Constructor
@@ -84,11 +81,14 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 * Constructor
+	 * Overloaded Constructor
 	 *
-	 * @param highThreshold The value to set for the high threshold temperature
-	 * @param lowThreshold The value to set for the low threshold temperature
-	 * @param tempUnits
+	 * @param highThreshold The high threshold for the temperature.
+	 * @param lowThreshold The low threshold for the temperature.
+	 * @param temperatureUnitsInFarenheit True to display temp measurements in Farenheit, false for Celcius
+	 * @param sensorSuite The list of system-configured sensors as found in the XML settings configuration file.
+	 * @param comPort The COM port which the system is connected to the host computer/laptop.
+	 * @param logger System logger.
 	 */
 	public Thermostat(double highThreshold, double lowThreshold, boolean temperatureUnitsInFarenheit, LinkedList<Sensor> sensorSuite,
 			String comPort, ThermostatLogger logger)
@@ -99,26 +99,17 @@ public class Thermostat extends Observable
 		this.sensorSuite = sensorSuite;
 		this.thermostatLogger = logger;
 
-		//
-		//thermostatLogger = new ThermostatLogger();
-
-		//Create RS232 Message Receiver and Sender
 		messageReciever = new MessageReceiver(sensorSuite, comPort);
 		messageSender = new MessageSender();
 
-		//Start sensor measurements
-		runnabledelayedTask = new Runnable()
+		sensorMeasurementsTask = new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				startSensors();
+				getCurrentTemperature();
 			}
 		};
-
-		ThermostatLogger.logger.config("Working!");
-		ThermostatLogger.logger.severe("Severe Msg Being Logged");
-		//ThermostatLogger.logger.log(Level.SEVERE, "TestingSevere!");
 	}
 
 	/**
@@ -134,8 +125,7 @@ public class Thermostat extends Observable
 
 				sensorSuite.get(i).addObserver((Observable obj, Object arg)->
 				{
-					System.out.println("\nValueChange: " + arg);
-					compare((double)arg);
+					validateAlarmIndicator((double)arg);
 					Thermostat.currentTemperature = (double)arg;
 
 					setChanged();
@@ -156,36 +146,20 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 *
-	 */
-	public void startSensors()
-	{
-		System.out.println("Thermostat.startSensors() is being called");
-		getCurrentTemperature();
-	}
-
-	/**
-	 *
-	 */
-	public void stopSensors()
-	{
-
-	}
-
-	/**
-	 * Method Description
+	 * Method which is used to startup the sensor measurements.
+	 * It runs a single task for measuring the temperature
 	 */
 	public void startSensorMeasurements()
 	{
-		if(scheduledPool == null)
+		if(scheduledMeasurementService == null)
 		{
-			scheduledPool = Executors.newScheduledThreadPool(1);
-			scheduledPool.scheduleWithFixedDelay(runnabledelayedTask, 1, tempSensorMeasurementPeriod, TimeUnit.MILLISECONDS);
+			scheduledMeasurementService = Executors.newScheduledThreadPool(1);
+			scheduledMeasurementService.scheduleWithFixedDelay(sensorMeasurementsTask, 1, tempSensorMeasurementPeriod, TimeUnit.MILLISECONDS);
 		}
-		else if(scheduledPool.isShutdown())
+		else if(scheduledMeasurementService.isShutdown())
 		{
-			scheduledPool = Executors.newScheduledThreadPool(1);
-			scheduledPool.scheduleWithFixedDelay(runnabledelayedTask, 1, tempSensorMeasurementPeriod, TimeUnit.MILLISECONDS);
+			scheduledMeasurementService = Executors.newScheduledThreadPool(1);
+			scheduledMeasurementService.scheduleWithFixedDelay(sensorMeasurementsTask, 1, tempSensorMeasurementPeriod, TimeUnit.MILLISECONDS);
 		}
 		else
 		{
@@ -194,29 +168,32 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 * Method Description
+	 * Method which is used to stop the sensor measurements.
+	 * It will shutdown the currently running task.
 	 */
 	public void stopSensorMeasurements()
 	{
-		if(scheduledPool != null)
+		if(scheduledMeasurementService != null)
 		{
-			scheduledPool.shutdown();
+			scheduledMeasurementService.shutdown();
 		}
 	}
 
 	/**
-	 * Method Description
+	 * Method used to validate the currently set alarm indicator against the most
+	 * recently measured temperature reading. Giving the comparison, it will use the
+	 * requestSensorData() method for the AlarmSensor.
 	 *
-	 * @param temperatureReading
+	 * @param temperatureReading The current temperature reading.
 	 */
-	public void compare(double temperatureReading)
+	public void validateAlarmIndicator(double temperatureReading)
 	{
 		if(temperatureReading <= lowThreshold)
 		{
 			if(alarmLevel != AlarmLevel.NORMAL)
 			{
 				System.out.println("temperatureReading <= lowThreshold at: "+temperatureReading);
-				getSensor(1).requestSensorData(AlarmSensor.NORMAL_ALARM_REQUEST);
+				getSensor(ALARM_SENSOR).requestSensorData(AlarmSensor.NORMAL_ALARM_REQUEST);
 				alarmLevel = AlarmLevel.NORMAL;
 			}
 		}
@@ -225,55 +202,51 @@ public class Thermostat extends Observable
 			if(alarmLevel != AlarmLevel.WARNING)
 			{
 				System.out.println("temperatureReading > lowThreshold && temperatureReading < highThreshold at: "+temperatureReading);
-				getSensor(1).requestSensorData(AlarmSensor.WARNING_ALARM_REQUEST);
+				getSensor(ALARM_SENSOR).requestSensorData(AlarmSensor.WARNING_ALARM_REQUEST);
 				alarmLevel = AlarmLevel.WARNING;
 			}
 		}
 		else
 		{
 			System.out.println("temperatureReading > highThreshold at: "+temperatureReading);
-			getSensor(1).requestSensorData(AlarmSensor.DANGER_ALARM_REQUEST);
+			getSensor(ALARM_SENSOR).requestSensorData(AlarmSensor.DANGER_ALARM_REQUEST);
 			alarmLevel = AlarmLevel.DANGER;
 		}
 	}
 
 	/**
-	 * Method used to save the record history
+	 * Method used to save the temperature sensor measurement history
 	 */
-	public void saveRecords()
+	public void saveTemperatureRecords()
 	{
 		tempDB.buildCSVFile();
 	}
 
 	/**
-	 * Method Description
-	 *
+	 * Method used to save all sensor record history
+	 * (FUTURE IMPLEMENTATION)
+	 */
+	public void saveSensorRecords()
+	{
+		//Do Nothing
+	}
+
+	/**
+	 * Method used to get the current temperature reading
 	 */
 	public void getCurrentTemperature()
 	{
-		getSensor(0).requestSensorData(TemperatureSensor.TEMPERATURE_READING_REQUEST);
+		getSensor(TMP102_SENSOR).requestSensorData(TemperatureSensor.TEMPERATURE_READING_REQUEST);
 	}
 
 	/**
-	 * Method used for testing
+	 * Method used to set the current temperature
 	 *
-	 * @throws InterruptedException
-	 */
-	public void getSimulatedCurrentTemperature() throws InterruptedException
-	{
-		System.out.println("Called getSimulatedCurrentTemperature()");	//Replace with a logger of some sort
-
-		currentTemperature = (Math.random() + 2) * 4.36;
-	}
-
-	/**
-	 * Method used to manually set the current temperature
-	 *
-	 * @param currentTemperature
+	 * @param currentTemperature The current temperature measurement.
 	 */
 	public void setCurrentTemperature(double currentTemperature)
 	{
-		this.currentTemperature = currentTemperature;
+		Thermostat.currentTemperature = currentTemperature;
 	}
 
 	/**
@@ -289,7 +262,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to get the Temperature Measurement Period Cycle
 	 *
-	 * @return
+	 * @return The temperature measurement period.
 	 */
 	public double getTemperatureMeasurementPeriod()
 	{
@@ -299,7 +272,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to return the size of the sensor list
 	 *
-	 * @return
+	 * @return The number of sensors in the list.
 	 */
 	public int getSensorListSize()
 	{
@@ -307,9 +280,9 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 * Method Description
+	 * Method used to add a sensor to the sensor list.
 	 *
-	 * @param sensor
+	 * @param sensor The sensor to add.
 	 */
 	public void addSensor(Sensor sensor)
 	{
@@ -319,8 +292,8 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to get a particular sensor by its index
 	 *
-	 * @param index
-	 * @return
+	 * @param index The position of the sensor.
+	 * @return The sensor at the supplied index.
 	 */
 	public Sensor getSensor(int index)
 	{
@@ -330,7 +303,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to get the high threshold value
 	 *
-	 * @return the highThreshold
+	 * @return The highThreshold
 	 */
 	public double getHighThreshold()
 	{
@@ -340,7 +313,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to set the high threshold value
 	 *
-	 * @param highThreshold the highThreshold to set
+	 * @param highThreshold The highThreshold to set
 	 */
 	public void setHighThreshold(double highThreshold)
 	{
@@ -350,7 +323,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to get the low threshold value
 	 *
-	 * @return the lowThreshold
+	 * @return The lowThreshold
 	 */
 	public double getLowThreshold()
 	{
@@ -360,7 +333,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to set the low threshold value
 	 *
-	 * @param lowThreshold the lowThreshold to set
+	 * @param lowThreshold The lowThreshold to set
 	 */
 	public void setLowThreshold(double lowThreshold)
 	{
@@ -368,9 +341,9 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain whether the current measurement value is in Farenheit or Celcius.
 	 *
-	 * @return the temperatureUnitsInFarenheit
+	 * @return The temperatureUnitsInFarenheit
 	 */
 	public boolean isTemperatureUnitsInFarenheit()
 	{
@@ -378,7 +351,7 @@ public class Thermostat extends Observable
 	}
 
 	/**
-	 * Method Description
+	 * Method used to set the temperature measurement units.
 	 *
 	 * @param temperatureUnitsInFarenheit the temperatureUnitsInFarenheit to set
 	 */
@@ -390,7 +363,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to obtain the Thermostat logger
 	 *
-	 * @return the thermostatLogger
+	 * @return The thermostatLogger
 	 */
 	public ThermostatLogger getThermostatLogger()
 	{
@@ -400,7 +373,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to set the logger for the Thermostat
 	 *
-	 * @param thermostatLogger the thermostatLogger to set
+	 * @param thermostatLogger The thermostatLogger to set
 	 */
 	public void setThermostatLogger(ThermostatLogger thermostatLogger)
 	{
@@ -410,7 +383,7 @@ public class Thermostat extends Observable
 	/**
 	 * Method used to obtain the MessageReciever of the Thermostat
 	 *
-	 * @return the messageReciever
+	 * @return The messageReciever
 	 */
 	public MessageReceiver getMessageReciever()
 	{
@@ -420,7 +393,7 @@ public class Thermostat extends Observable
 	/**
 	 * Message used to set the MessageReceiver of the Thermostat
 	 *
-	 * @param messageReciever the messageReciever to set
+	 * @param messageReciever The messageReciever to set
 	 */
 	public void setMessageReciever(MessageReceiver messageReciever)
 	{

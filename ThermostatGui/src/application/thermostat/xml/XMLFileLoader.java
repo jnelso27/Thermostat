@@ -34,16 +34,16 @@ import application.thermostat.sensors.TemperatureSensor;
 public class XMLFileLoader
 {
 	/** Thermostat object to load settings to */
-	Thermostat thermostat = null;
+	private Thermostat thermostat = null;
 
 	/** Application logger */
-	ThermostatLogger logger = null;
+	private ThermostatLogger logger = null;
 
 	/** List of Sensors to Build */
-	LinkedList<Sensor> listOfSensors = new LinkedList<Sensor>();
+	private LinkedList<Sensor> listOfSensors = new LinkedList<Sensor>();
 
 	/** Default Filepath of the XML File to load */
-    String defaultFilePath = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostat-config-settings.xml";
+    private String defaultFilePath = "C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostat-config-settings.xml";
 
 	/**
 	 * Default Constructor
@@ -64,8 +64,6 @@ public class XMLFileLoader
 	    DocumentBuilder builder = null;
 	    Document document = null;
 
-
-
 	    //High threshold for alarm functionality
 	    double highThreshold = 0.0;
 
@@ -81,7 +79,7 @@ public class XMLFileLoader
         //Represents the logging level for the Thermostat Application - NOT FULLY IMPLEMENTED
         int loggingLevel = 0;
 
-        //
+        //Logging path
         String loggingPath = "";
 
         //Represents the default COM port
@@ -103,14 +101,15 @@ public class XMLFileLoader
 		}
 		catch (SAXException | IOException e)
 		{
+			//Replace with a Logger message here in a future version...
 			e.printStackTrace();
 		}
 
-		//
+		//Get list of nodes
 	    NodeList nodeList = document.getDocumentElement().getChildNodes();
 
 	    //Loop through XML File to load
-	    for (int i = 0; i < nodeList.getLength(); i++)
+	    for (int i=0; i<nodeList.getLength(); i++)
 	    {
 	         Node node = nodeList.item(i);
 
@@ -122,16 +121,22 @@ public class XMLFileLoader
 
 	              highThreshold = Double.parseDouble(elem.getElementsByTagName("Highthreshold").item(0).getChildNodes().item(0).getNodeValue());
 	              System.out.println("Load XML Settings-Loading High Threshold:" + highThreshold);
+
 	              lowThreshold = Double.parseDouble(elem.getElementsByTagName("Lowthreshold").item(0).getChildNodes().item(0).getNodeValue());
 	              System.out.println("Load XML Settings-Loading Low Threshold:" + lowThreshold);
+
 	              tempUnits = Boolean.parseBoolean(elem.getElementsByTagName("TemperatureUnitsInFarenheit").item(0).getChildNodes().item(0).getNodeValue());
 	              System.out.println("Load XML Settings-Loading Temperature Units in Fahrenheit:" + tempUnits);
+
 	              loggingEnabled =  Boolean.parseBoolean(elem.getElementsByTagName("LoggingEnabled").item(0).getChildNodes().item(0).getNodeValue());
 	              System.out.println("Load XML Settings-Loading Logging Enabled:" + loggingEnabled);
+
 	              loggingLevel =  Integer.parseInt(elem.getElementsByTagName("LoggingLevel").item(0).getChildNodes().item(0).getNodeValue());
 	              System.out.println("Load XML Settings-Loading Logging Level Of:" + loggingLevel);
+
 	              loggingPath =  elem.getElementsByTagName("LoggingPath").item(0).getChildNodes().item(0).getNodeValue();
 	              System.out.println("Load XML Settings-Setting LoggingPath To:" + loggingPath);
+
 	              comPort =  elem.getElementsByTagName("ComPort").item(0).getChildNodes().item(0).getNodeValue();
 	              System.out.println("Load XML Settings-Loading Com Port setting:" + comPort);
 	         }
@@ -143,8 +148,10 @@ public class XMLFileLoader
 
 	        	 String sensorName = elem.getElementsByTagName("SensorName").item(0).getChildNodes().item(0).getNodeValue();
 	        	 System.out.println("Load XML Settings-Loading Sensor Named:" + sensorName);
+
 	        	 Integer sensorType = Integer.parseInt(elem.getElementsByTagName("SensorType").item(0).getChildNodes().item(0).getNodeValue());
 	        	 System.out.println("Load XML Settings-Loading Sensor Type:" + sensorType);
+
 	        	 Boolean testingFlag = Boolean.parseBoolean(elem.getElementsByTagName("TestingFlag").item(0).getChildNodes().item(0).getNodeValue());
 	        	 System.out.println("Load XML Settings-Loading Sensor Testing Flag to:" + testingFlag);
 

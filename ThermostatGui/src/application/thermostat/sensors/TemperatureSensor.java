@@ -1,13 +1,13 @@
 package application.thermostat.sensors;
 
-import application.thermostat.message.Message;
 import application.thermostat.message.MessageSender;
-import application.thermostat.message.messages.TemperatureReadingRequestMessage;
+import application.thermostat.message.messages.Message;
+import application.thermostat.message.messages.RequestGetTempReadingMsg;
 
 /***
  * Class Description
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-09
  *
  * @author J Nelson
  *
@@ -18,10 +18,10 @@ public class TemperatureSensor extends Sensor
 	public static int TEMPERATURE_READING_REQUEST = 0;
 
 	/** Temperature in Degrees Celcius */
-	public double temp_in_celcius = 0;
+	private double tempInCelcius = 0;
 
 	/** Temperature in Degrees Farenheit */
-	public double temp_in_farenheit = 0;
+	private double tempInFarenheit = 0;
 
 	/**
 	 * Default Constructor
@@ -49,14 +49,23 @@ public class TemperatureSensor extends Sensor
 		//Code to save off the temperature
 
 		//Code to process reading
-		temp_in_celcius = getTemperatureInCelcius(message);
-		System.out.println("Temperature Reading (C): " + temp_in_celcius);
+		tempInCelcius = getTemperatureInCelcius(message);
+		System.out.println("Temperature Reading (C): " + tempInCelcius);
 
-		temp_in_farenheit = (1.8 * temp_in_celcius) + 32;
-		System.out.println("Temperature Reading (F): " + temp_in_farenheit);
+		tempInFarenheit = (1.8 * tempInCelcius) + 32;
+		System.out.println("Temperature Reading (F): " + tempInFarenheit);
 
 		setChanged();
-		notifyObservers(temp_in_farenheit);
+		notifyObservers(tempInFarenheit);
+	}
+
+	@Override
+	public void requestSensorData(int request)
+	{
+		if(request == TEMPERATURE_READING_REQUEST)
+		{
+			requestTemperature();
+		}
 	}
 
 	/**
@@ -72,19 +81,13 @@ public class TemperatureSensor extends Sensor
 		return convertedTemp*0.0625;
 	}
 
-	@Override
-	public void requestSensorData(int request)
-	{
-		if(request == TEMPERATURE_READING_REQUEST)
-		{
-			requestTemperature();
-		}
-	}
-
+	/**
+	 * Method that is used to request the Temperature reading from the sensor.
+	 */
 	private void requestTemperature()
 	{
 		byte messageData[] = {'G','E'};
 
-		MessageSender.sendMessage(new TemperatureReadingRequestMessage(messageData));
+		MessageSender.sendMessage(new RequestGetTempReadingMsg(messageData));
 	}
 }

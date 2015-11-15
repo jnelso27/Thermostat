@@ -5,43 +5,43 @@ import java.time.LocalDateTime;
 /**
  * Class that represents a single TMP102 sensor record.
  *
- * Date:
+ * Date of Last Change: 2015-11-13
  *
  * @author J Nelson
  *
  */
-public class TMP102SensorRecord
+public class TemperatureSensorRecord
 {
-	/** Variable Description */
+	/** Reading from the temperature sensor */
 	private double tempMeasurement = 0.0;
 
-	/** Variable Description */
+	/** Date for the time of the reading */
 	private LocalDateTime tempMeasurementDate;
 
 	/**
 	 * Default Constructor
 	 */
-	public TMP102SensorRecord()
+	public TemperatureSensorRecord()
 	{
-		//Do nothing in the Default Constructor
+		//Do nothing
 	}
 
 	/**
-	 * Constructor Description
+	 * Overloaded constructor
 	 *
-	 * @param tempMeasurement
-	 * @param localDateTime
+	 * @param tempMeasurement The reading as measured from the temperature sensor.
+	 * @param localDateTime The date/time of the reading.
 	 */
-	public TMP102SensorRecord(double tempMeasurement, LocalDateTime localDateTime)
+	public TemperatureSensorRecord(double tempMeasurement, LocalDateTime localDateTime)
 	{
 		this.tempMeasurement = tempMeasurement;
 		this.tempMeasurementDate = localDateTime;
 	}
 
 	/**
-	 * Method Description
+	 * Method to get the temperature measurement.
 	 *
-	 * @return the tempMeasurement
+	 * @return The tempMeasurement.
 	 */
 	public double getTempMeasurement()
 	{
@@ -49,9 +49,9 @@ public class TMP102SensorRecord
 	}
 
 	/**
-	 * Method Description
+	 * Method used to set the temperature measurement.
 	 *
-	 * @param tempMeasurement the tempMeasurement to set
+	 * @param tempMeasurement The tempMeasurement to set.
 	 */
 	public void setTempMeasurement(double tempMeasurement)
 	{
@@ -59,9 +59,9 @@ public class TMP102SensorRecord
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain the date/time of the temperature measurement.
 	 *
-	 * @return the tempMeasurementDate
+	 * @return The tempMeasurementDate.
 	 */
 	public LocalDateTime getTempMeasurementDate()
 	{
@@ -69,9 +69,9 @@ public class TMP102SensorRecord
 	}
 
 	/**
-	 * Method Description
+	 * Method used to set the date/time of the temperature measurement.
 	 *
-	 * @param tempMeasurementDate the tempMeasurementDate to set
+	 * @param tempMeasurementDate the tempMeasurementDate to set.
 	 */
 	public void setTempMeasurementDate(LocalDateTime tempMeasurementDate)
 	{

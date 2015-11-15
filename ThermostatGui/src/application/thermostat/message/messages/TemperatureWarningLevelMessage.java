@@ -1,8 +1,5 @@
 package application.thermostat.message.messages;
 
-import application.thermostat.message.Message;
-import application.thermostat.message.MessageType;
-
 /***
  * Class Description
  *

@@ -4,7 +4,7 @@
 		<Highthreshold>80.0</Highthreshold>
 		<Lowthreshold>75.0</Lowthreshold>
 		<TemperatureUnitsInFarenheit>true</TemperatureUnitsInFarenheit>
-		<LoggingEnabled>true</LoggingEnabled>
+		<LoggingEnabled>false</LoggingEnabled>
 		<LoggingLevel>1</LoggingLevel>
 		<LoggingPath>C:\\Users\\DeveloperMain\\thermostat-project-workspace\\ThermostatGui\\thermostatlog.log</LoggingPath>
 		<ComPort>COM7</ComPort>

@@ -6,7 +6,7 @@ import java.util.Observable;
  * Class represents a generic sensor object. All sensors should be subclasses of the Sensor
  * class.
  *
- * Date of Last Change: 2015-11-07
+ * Date of Last Change: 2015-11-09
  *
  * @author J Nelson
  *
@@ -14,13 +14,13 @@ import java.util.Observable;
 public class Sensor extends Observable
 {
 	/** Name of the Sensor */
-	public String sensorName = "";
+	private String sensorName = "";
 
 	/** Type of Sensor */
-	public int sensorType = SensorType.DEFAULT;
+	private int sensorType = SensorType.DEFAULT;
 
 	/** Testing flag used to simulated sensor functionality for testing purposes */
-	public boolean testingFlag = true;
+	private boolean testingFlag = true;
 
 	/**
 	 * Default Constructor

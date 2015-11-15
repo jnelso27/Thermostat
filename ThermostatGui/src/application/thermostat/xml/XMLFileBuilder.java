@@ -83,7 +83,7 @@ public class XMLFileBuilder
 			applicationSettings.appendChild(comPort);
 
 			//Now loop through the sensorlist
-			for(int i=0;i<thermostat.getSensorListSize();i++)
+			for(int i=0; i<thermostat.getSensorListSize(); i++)
 			{
 				Element sensor = doc.createElement("Sensor");
 				rootElement.appendChild(sensor);

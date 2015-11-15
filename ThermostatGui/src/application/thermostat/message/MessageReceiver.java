@@ -12,12 +12,11 @@ import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
-import application.Main;
-import application.thermostat.crc.CRC16;
+import application.ThermostatGUI;
+import application.thermostat.crc.CRCGenerator;
+import application.thermostat.message.messages.Message;
 import application.thermostat.message.processor.MessageProcessor;
 import application.thermostat.sensors.Sensor;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 /***
  * Class used to receive a message
@@ -48,7 +47,7 @@ public class MessageReceiver
 	private int parityBits = 0;
 
 	/** Variable Description */
-	LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
+	private LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
 	/**
 	 * Constructor
@@ -67,12 +66,11 @@ public class MessageReceiver
 			serialPort.setParams(baudRate, dataBits, stopBits, parityBits);
 			serialPort.setEventsMask(mask);
 			serialPort.addEventListener(new SerialPortReader(this.sensorSuite));
-
-			System.out.println("Message Reciever Initialized Successfully"); //DEBUG Message
 		}
 		catch(SerialPortException ex)
 		{
-			System.out.println("The exception: " + ex + "occurred."); //Add a logger
+			//Replace with a Logger message here in a future version...
+			System.out.println("The exception: " + ex + "occurred.");
 		}
 	}
 
@@ -98,11 +96,13 @@ public class MessageReceiver
 			serialPort.setEventsMask(mask);
 			serialPort.addEventListener(new SerialPortReader(this.sensorSuite));
 
-			System.out.println("Message Reciever Initialized Successfully"); //DEBUG Message
+			//Replace with a Logger message here in a future version...
+			System.out.println("Message Reciever Initialized Successfully");
 		}
 		catch(SerialPortException ex)
 		{
-			System.out.println("The exception: " + ex + "occurred."); //Add a logger
+			//Replace with a Logger message here in a future version...
+			System.out.println("The exception: " + ex + "occurred.");
 		}
 	}
 
@@ -237,7 +237,7 @@ public class MessageReceiver
 			{
 				payload[i-1] = receivedMessage[i];
 			}
-			int calculatedMessageCRC = CRC16.calculateCRCCCITTXModem(payload);
+			int calculatedMessageCRC = CRCGenerator.calculateCRCCCITTXModem(payload);
 
 			System.out.println("calculatedMessageCRC: "+ calculatedMessageCRC);
 
@@ -263,7 +263,7 @@ public class MessageReceiver
 	 * @author J Nelson
 	 *
 	 */
-	static class SerialPortReader implements SerialPortEventListener
+	public static class SerialPortReader implements SerialPortEventListener
 	{
 		/** Variable Description */
 		boolean msgValidity;
@@ -283,7 +283,7 @@ public class MessageReceiver
 			@Override
 			public Object call() throws Exception
 			{
-				Main.showErrorDialog("No messages received in the last 30 seconds");
+				ThermostatGUI.showErrorDialog("No messages received in the last 30 seconds");
 				return "Message Not Received in the last 30 seconds!";
 			}
 		};

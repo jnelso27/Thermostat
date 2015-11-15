@@ -2,5 +2,5 @@
 	-fx-font: bold 10pt "Times New Roman";
 }
 .root{
-	-fx-background: rgb(225, 228, 203);
+	-fx-background: lightgrey;
 }

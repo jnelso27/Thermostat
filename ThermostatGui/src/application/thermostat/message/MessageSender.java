@@ -1,6 +1,7 @@
 package application.thermostat.message;
 
 import application.thermostat.log.ThermostatLogger;
+import application.thermostat.message.messages.Message;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
@@ -29,7 +30,7 @@ public class MessageSender
 	/**
 	 * Used to send a Message over the configured Serial Port
 	 *
-	 * @param messageToSend The message to send over the serial port to the Microcontroller
+	 * @param messageToSend The message to send over the serial port to the Microcontroller.
 	 */
 	public static void sendMessage(Message messageToSend)
 	{
@@ -40,7 +41,6 @@ public class MessageSender
 		}
 		catch(SerialPortException ex)
 		{
-			System.out.print("BisonMeat!");
 			ThermostatLogger.logger.severe("The Exception: " + ex + "Has Occurred");
 		}
 	}

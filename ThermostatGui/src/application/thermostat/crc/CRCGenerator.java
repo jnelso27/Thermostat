@@ -1,33 +1,37 @@
 package application.thermostat.crc;
 
 /**
- * Class Description (TODO)
+ * Class used to generate a 16-bit CRC
  *
- * Date:
+ * Date of Last Change: 2015-11-14
  *
  * @author J Nelson
  *
  */
-public class CRC16
+public class CRCGenerator
 {
 	/**
 	 * Method to calculate 16-bit CRC based on Preset of 0x0000
-	 * and polynomial of 0x1021 (XModem - NEED TO VERIFY)
+	 * and polynomial of 0x1021
 	 *
-	 * @param buffer
+	 * @param data The array of bytes to generate CRC on.
+	 * @return The calculated CRC value.
 	 */
 	public static int calculateCRCCCITTXModem(byte[] data)
 	{
 		final int POLYNOMIAL   = 0x1021;
 		final int PRESET_VALUE = 0x0000;
 
+		//Remainder
 		int rem = PRESET_VALUE;
 
-		for (int i = 0; i < data.length; i++ )
+		//Loop through the entire array
+		for (int i = 0; i < data.length; i++)
 		{
-			rem ^= data[i] << 8;	//XOR databyte after AND'ing
+			//XOR the data
+			rem ^= data[i] << 8;
 
-			//For each bit in the byte
+			//Loop for each bit in the byte
 			for (int j = 0; j < 8; j++)
 			{
 				if ((rem & 0x8000) != 0)
@@ -47,10 +51,11 @@ public class CRC16
 	}
 
 	/**
-	 * Method Description
+	 * Method to calculate 16-bit CRC based on Preset of 0xFFFF
+	 * and polynomial of 0x1021
 	 *
-	 * @param data
-	 * @return
+	 * @param data The array of bytes to generate CRC on.
+	 * @return The calculated CRC value.
 	 */
 	public static int calculateCRCCCITTFFFF(byte[] data)
 	{
@@ -61,9 +66,9 @@ public class CRC16
 
 		for (int i = 0; i < data.length; i++ )
 		{
-			rem ^= data[i] << 8;	//XOR databyte after AND'ing
+			rem ^= data[i] << 8;
 
-			//For each bit in the byte
+			//Loop for each bit in the byte
 			for (int j = 0; j < 8; j++)
 			{
 				if ((rem & 0x8000) != 0)
@@ -86,7 +91,8 @@ public class CRC16
 	 * Method to calculate 16-bit CRC based on Preset of 0x1D0F
 	 * and polynomial of 0x1021 ()
 	 *
-	 * @param buffer
+	 * @param data The array of bytes to generate CRC on.
+	 * @return  The calculated CRC value.
 	 */
 	public static int calculateCRC16CCITTX1D0F(byte[] data)
 	{
@@ -97,9 +103,9 @@ public class CRC16
 
 		for (int i = 0; i < data.length; i++ )
 		{
-			rem ^= data[i] << 8;	//XOR databyte after AND'ing
+			rem ^= data[i] << 8;
 
-			//For each bit in the byte
+			//Loop for each bit in the byte
 			for (int j = 0; j < 8; j++)
 			{
 				if ((rem & 0x8000) != 0)

@@ -1,4 +1,4 @@
-package application.thermostat.message;
+package application.thermostat.message.messages;
 
 /***
  * Class represents the various types of messages that can be sent or

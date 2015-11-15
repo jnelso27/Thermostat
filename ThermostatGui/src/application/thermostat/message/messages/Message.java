@@ -1,6 +1,6 @@
-package application.thermostat.message;
+package application.thermostat.message.messages;
 
-import application.thermostat.crc.CRC16;
+import application.thermostat.crc.CRCGenerator;
 
 /***
  * Class Description
@@ -74,7 +74,7 @@ public abstract class Message
 		this.messagePayload[2] = this.message[REC_MSG_DATA_LSB_NDX];
 
 		//Calculate the CRC and add to the appropriate message fields
-		int crc = CRC16.calculateCRCCCITTXModem(messagePayload);
+		int crc = CRCGenerator.calculateCRCCCITTXModem(messagePayload);
 
 		//Add CRC to the message
 		this.message[REC_MSG_CRCBYTE1_NDX] = (byte) (crc >> BYTE_SIZE_IN_BITS);	//Get first byte from the integer

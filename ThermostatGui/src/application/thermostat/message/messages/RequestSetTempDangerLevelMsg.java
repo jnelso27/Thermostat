@@ -1,8 +1,5 @@
 package application.thermostat.message.messages;
 
-import application.thermostat.message.Message;
-import application.thermostat.message.MessageType;
-
 /***
  * Class Description
  *
@@ -11,7 +8,7 @@ import application.thermostat.message.MessageType;
  * @author J Nelson
  *
  */
-public class TemperatureDangerLevelMessage extends Message
+public class RequestSetTempDangerLevelMsg extends Message
 {
 	/** Default Message Data */
 	public static byte defaultMessageData[] = {0x00, 0x01};
@@ -19,7 +16,7 @@ public class TemperatureDangerLevelMessage extends Message
 	/**
 	 * Default Constructor
 	 */
-	public TemperatureDangerLevelMessage()
+	public RequestSetTempDangerLevelMsg()
 	{
 		super(MessageType.DANGER_ALARM_SET_MSG, defaultMessageData);
 	}
@@ -29,7 +26,7 @@ public class TemperatureDangerLevelMessage extends Message
 	 *
 	 * @param messageData
 	 */
-	public TemperatureDangerLevelMessage(byte[] messageData)
+	public RequestSetTempDangerLevelMsg(byte[] messageData)
 	{
 		super(MessageType.DANGER_ALARM_SET_MSG, messageData);
 	}
