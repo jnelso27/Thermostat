@@ -1,9 +1,15 @@
 package application.thermostat.message.messages;
 
 /***
- * Class Description
+ * Message used to request the MCU to enable the Warning Alarm
+ * indicator (LED).
  *
- * Date of Last Change: 2015-11-07
+ * This message is currently sent from the Host (PC)
+ * to the Client (MCU) when the temperature is above the configured value
+ * for the lowThreshold value but below the configured value for
+ * highThreshold (Thermostat class).
+ *
+ * Date of Last Change: 2015-11-15
  *
  * @author J Nelson
  *
@@ -24,7 +30,7 @@ public class TemperatureWarningLevelMessage extends Message
 	/**
 	 * TODO
 	 *
-	 * @param messageData
+	 * @param messageData The message data to add to the message.
 	 */
 	public TemperatureWarningLevelMessage(byte[] messageData)
 	{

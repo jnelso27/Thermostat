@@ -13,6 +13,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import jssc.SerialPortException;
 
@@ -322,6 +323,7 @@ public class ThermostatGUI extends Application
             {
             	FileChooser loadfileChooser = new FileChooser();
             	loadfileChooser.setTitle("Open XML Settings File");
+            	loadfileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
                 File file = loadfileChooser.showOpenDialog(primaryStage);
 
                 if(file != null)
@@ -340,6 +342,7 @@ public class ThermostatGUI extends Application
             {
             	FileChooser saveFileChooser = new FileChooser();
                 saveFileChooser.setTitle("Save Application XML Settings File");
+                saveFileChooser.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
                 File file = saveFileChooser.showSaveDialog(primaryStage);
 
                 if(file != null)
@@ -372,8 +375,7 @@ public class ThermostatGUI extends Application
 				}
                 catch (SerialPortException e)
                 {
-                	//ThermostatGUI.showErrorDialog("No messages received in the last 30 seconds");
-					//e.printStackTrace();
+                	//Add Logger statement here in a future update.
 				}
 
                 Platform.exit();

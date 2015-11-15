@@ -9,17 +9,20 @@ import application.thermostat.sensors.Sensor;
 /***
  * Class is used to process incoming messages from the thermostat
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-15
  *
  * @author J Nelson
  *
  */
 public class MessageProcessor
 {
-	/** Variable Description */
+	/** Index of configured TMP102 Sensor */
+	private static final int TMP102_SENSOR = 0;
+
+	/** Linked list of sensors that are available for processing */
 	private LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
-	/** Variable Description */
+	/** A default sensor */
 	private Sensor sensor = new Sensor();
 
 	/**
@@ -39,13 +42,12 @@ public class MessageProcessor
 	{
 		if(serialMessage[Message.REC_MSG_TYPE_NDX] == MessageType.TEMP_SENSOR_READING_MSG)
 		{
-			System.out.println("Received a TEMP_SENSOR_READING_MSG");
-			sensor = sensorSuite.get(0);
+			sensor = sensorSuite.get(TMP102_SENSOR);
 			sensor.processSensorData(serialMessage);
 		}
 		else
 		{
-			System.out.println("An unknown message was received. Unable to Process! " + serialMessage.toString());
+			//Replace with a Logger message here in a future version...
 		}
 	}
 }

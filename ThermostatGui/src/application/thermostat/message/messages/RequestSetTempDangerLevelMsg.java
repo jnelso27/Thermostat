@@ -1,9 +1,14 @@
 package application.thermostat.message.messages;
 
 /***
- * Class Description
+ * Message used to request the MCU to enable the Danger Alarm
+ * indicator (LED).
  *
- * Date of Last Change: 2015-11-07
+ * This message is currently sent from the Host (PC)
+ * to the Client (MCU) when the temperature exceeds the configured value
+ * for the highThreshold value (Thermostat class).
+ *
+ * Date of Last Change: 2015-11-15
  *
  * @author J Nelson
  *
@@ -22,9 +27,9 @@ public class RequestSetTempDangerLevelMsg extends Message
 	}
 
 	/**
-	 * TODO
+	 * Overloaded constructor
 	 *
-	 * @param messageData
+	 * @param messageData The message data to add to the message.
 	 */
 	public RequestSetTempDangerLevelMsg(byte[] messageData)
 	{

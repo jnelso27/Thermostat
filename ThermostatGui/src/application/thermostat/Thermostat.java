@@ -30,10 +30,10 @@ import application.thermostat.sensors.TemperatureSensor;
 public class Thermostat extends Observable
 {
 	/** Index of configured TMP102 Sensor */
-	private final int TMP102_SENSOR = 0;
+	private static final int TMP102_SENSOR = 0;
 
 	/** Index of configured alarm (LED) Sensor */
-	private final int ALARM_SENSOR = 1;
+	private static final int ALARM_SENSOR = 1;
 
 	/** Current measured temperature */
 	private static double currentTemperature = 0;

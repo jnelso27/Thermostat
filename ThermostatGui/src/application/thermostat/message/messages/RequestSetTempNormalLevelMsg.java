@@ -1,9 +1,14 @@
 package application.thermostat.message.messages;
 
 /***
- * Class Description
+ * Message used to request the MCU to enable the Normal Alarm
+ * indicator (LED).
  *
- * Date of Last Change: 2015-11-07
+ * This message is currently sent from the Host (PC)
+ * to the Client (MCU) when the temperature is below or at the configured value
+ * for the lowThreshold value (Thermostat class).
+ *
+ * Date of Last Change: 2015-11-15
  *
  * @author J Nelson
  *
@@ -24,7 +29,7 @@ public class RequestSetTempNormalLevelMsg extends Message
 	/**
 	 * TODO
 	 *
-	 * @param messageData
+	 * @param messageData The message data to add to the message.
 	 */
 	public RequestSetTempNormalLevelMsg(byte[] messageData)
 	{

@@ -1,7 +1,7 @@
 package application.thermostat.message.messages;
 
 /***
- * Class Description
+ * Message used to request the temperature reading of the TMP102 sensor.
  *
  * Date of Last Change: 2015-11-12
  *
@@ -19,9 +19,9 @@ public class RequestGetTempReadingMsg extends Message
 	}
 
 	/**
-	 * TODO
+	 * Overloaded constructor
 	 *
-	 * @param messageData
+	 * @param messageData The message data to add to the message.
 	 */
 	public RequestGetTempReadingMsg(byte[] messageData)
 	{

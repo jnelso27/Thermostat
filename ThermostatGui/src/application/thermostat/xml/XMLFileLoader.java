@@ -14,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import application.ThermostatGUI;
 import application.thermostat.Thermostat;
 import application.thermostat.log.ThermostatLogger;
 import application.thermostat.sensors.AlarmSensor;
@@ -56,7 +57,7 @@ public class XMLFileLoader
 	/**
 	 * Method used to load up the configuration file
 	 *
-	 * @return
+	 * @return The loaded Thermostat object.
 	 */
 	public Thermostat loadXMLConfigurationFile()
 	{
@@ -91,6 +92,7 @@ public class XMLFileLoader
 		}
 		catch (ParserConfigurationException e)
 		{
+			ThermostatGUI.showErrorDialog("Unable to OPEN selected file");
 			e.printStackTrace();
 		}
 
@@ -102,7 +104,8 @@ public class XMLFileLoader
 		catch (SAXException | IOException e)
 		{
 			//Replace with a Logger message here in a future version...
-			e.printStackTrace();
+			ThermostatGUI.showErrorDialog("Unable to OPEN selected file");
+			//e.printStackTrace();
 		}
 
 		//Get list of nodes
@@ -115,34 +118,36 @@ public class XMLFileLoader
 
 	         if (node.getNodeName() == "ApplicationSettings")
 	         {
-	        	 System.out.println("Load XML Settings-ApplicationSettings");
+	        	 //Replace with a Logger message here in a future version...
+	        	 //System.out.println("Load XML Settings-ApplicationSettings");
 
-	              Element elem = (Element) node;
+	        	 Element elem = (Element) node;
 
-	              highThreshold = Double.parseDouble(elem.getElementsByTagName("Highthreshold").item(0).getChildNodes().item(0).getNodeValue());
-	              System.out.println("Load XML Settings-Loading High Threshold:" + highThreshold);
+	        	 highThreshold = Double.parseDouble(elem.getElementsByTagName("Highthreshold").item(0).getChildNodes().item(0).getNodeValue());
+	        	 System.out.println("Load XML Settings-Loading High Threshold:" + highThreshold);
 
-	              lowThreshold = Double.parseDouble(elem.getElementsByTagName("Lowthreshold").item(0).getChildNodes().item(0).getNodeValue());
-	              System.out.println("Load XML Settings-Loading Low Threshold:" + lowThreshold);
+	        	 lowThreshold = Double.parseDouble(elem.getElementsByTagName("Lowthreshold").item(0).getChildNodes().item(0).getNodeValue());
+	        	 System.out.println("Load XML Settings-Loading Low Threshold:" + lowThreshold);
 
-	              tempUnits = Boolean.parseBoolean(elem.getElementsByTagName("TemperatureUnitsInFarenheit").item(0).getChildNodes().item(0).getNodeValue());
-	              System.out.println("Load XML Settings-Loading Temperature Units in Fahrenheit:" + tempUnits);
+	        	 tempUnits = Boolean.parseBoolean(elem.getElementsByTagName("TemperatureUnitsInFarenheit").item(0).getChildNodes().item(0).getNodeValue());
+	        	 System.out.println("Load XML Settings-Loading Temperature Units in Fahrenheit:" + tempUnits);
 
-	              loggingEnabled =  Boolean.parseBoolean(elem.getElementsByTagName("LoggingEnabled").item(0).getChildNodes().item(0).getNodeValue());
-	              System.out.println("Load XML Settings-Loading Logging Enabled:" + loggingEnabled);
+	        	 loggingEnabled =  Boolean.parseBoolean(elem.getElementsByTagName("LoggingEnabled").item(0).getChildNodes().item(0).getNodeValue());
+	        	 System.out.println("Load XML Settings-Loading Logging Enabled:" + loggingEnabled);
 
-	              loggingLevel =  Integer.parseInt(elem.getElementsByTagName("LoggingLevel").item(0).getChildNodes().item(0).getNodeValue());
-	              System.out.println("Load XML Settings-Loading Logging Level Of:" + loggingLevel);
+	        	 loggingLevel =  Integer.parseInt(elem.getElementsByTagName("LoggingLevel").item(0).getChildNodes().item(0).getNodeValue());
+	        	 System.out.println("Load XML Settings-Loading Logging Level Of:" + loggingLevel);
 
-	              loggingPath =  elem.getElementsByTagName("LoggingPath").item(0).getChildNodes().item(0).getNodeValue();
-	              System.out.println("Load XML Settings-Setting LoggingPath To:" + loggingPath);
+	        	 loggingPath =  elem.getElementsByTagName("LoggingPath").item(0).getChildNodes().item(0).getNodeValue();
+	        	 System.out.println("Load XML Settings-Setting LoggingPath To:" + loggingPath);
 
-	              comPort =  elem.getElementsByTagName("ComPort").item(0).getChildNodes().item(0).getNodeValue();
-	              System.out.println("Load XML Settings-Loading Com Port setting:" + comPort);
+	        	 comPort =  elem.getElementsByTagName("ComPort").item(0).getChildNodes().item(0).getNodeValue();
+	        	 System.out.println("Load XML Settings-Loading Com Port setting:" + comPort);
 	         }
 	         if(node.getNodeName() == "Sensor")
 	         {
-	        	 System.out.println("Load XML Settings-Sensor");
+	        	//Replace with a Logger message here in a future version...
+	        	//System.out.println("Load XML Settings-Sensor");
 
 	        	 Element elem = (Element) node;
 
@@ -176,8 +181,6 @@ public class XMLFileLoader
         thermostat = new Thermostat(highThreshold, lowThreshold, tempUnits, listOfSensors, comPort, logger);
 
 	    thermostat.addSensorObservers();
-
-	    ThermostatLogger.logger.severe("XML Settings Loaded Successfully");
 
 	    return thermostat;
 	}

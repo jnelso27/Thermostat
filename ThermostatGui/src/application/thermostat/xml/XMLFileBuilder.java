@@ -17,9 +17,10 @@ import org.w3c.dom.Element;
 import application.thermostat.Thermostat;
 
 /***
- * Class Description
+ * The XMLFileBuilder class is used to create the XML Configuration File for the
+ * Host (PC) Thermostat system application.
  *
- * Date of Last Change: 2015-10-22
+ * Date of Last Change: 2015-11-15
  *
  * @author J Nelson
  *
@@ -35,10 +36,10 @@ public class XMLFileBuilder
 	}
 
 	/**
-	 * Method Description
+	 * Method used to build the configuration settings XML file.
 	 *
-	 * @param thermostat
-	 * @param filePath
+	 * @param thermostat A thermostat object holding all configured sensors with updated configuration settings.
+	 * @param filePath The path to save the configuration settings file to.
 	 */
 	public void buildXMLConfigurationFile(Thermostat thermostat, String filePath)
 	{
@@ -82,7 +83,7 @@ public class XMLFileBuilder
 			comPort.appendChild(doc.createTextNode(thermostat.getMessageReciever().getComPort()));
 			applicationSettings.appendChild(comPort);
 
-			//Now loop through the sensorlist
+			//Now loop through the list of sensors to create a <Sensor> tag with settings.
 			for(int i=0; i<thermostat.getSensorListSize(); i++)
 			{
 				Element sensor = doc.createElement("Sensor");
@@ -101,7 +102,7 @@ public class XMLFileBuilder
 				sensor.appendChild(testingFlag);
 			}
 
-			// write the content into xml file
+			// Write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
@@ -109,15 +110,17 @@ public class XMLFileBuilder
 
 			transformer.transform(source, result);
 
-			System.out.println("File saved!");
+			//Replace with a Logger message here in a future version...
 		}
 		catch (ParserConfigurationException pce)
 		{
+			//Replace with a Logger message here in a future version...
 			pce.printStackTrace();
 		}
 		catch (TransformerException tfe)
 		{
+			//Replace with a Logger message here in a future version...
 			tfe.printStackTrace();
-		 }
+		}
 	}
 }
