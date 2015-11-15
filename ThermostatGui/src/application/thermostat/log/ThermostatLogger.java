@@ -103,9 +103,9 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain the fileHandler for the class.
 	 *
-	 * @return the fileHandler
+	 * @return The fileHandler.
 	 */
 	public Handler getFileHandler()
 	{
@@ -113,9 +113,9 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Method Description
+	 * Method used to set the fileHandler
 	 *
-	 * @param fileHandler the fileHandler to set
+	 * @param fileHandler The fileHandler to set.
 	 */
 	public void setFileHandler(Handler fileHandler)
 	{
@@ -123,9 +123,9 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain the path where the log file will be saved to.
 	 *
-	 * @return the pathOfLogFile
+	 * @return The path of the log file saved.
 	 */
 	public String getPathOfLogFile()
 	{
@@ -133,9 +133,9 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Method Description
+	 * Method used to set the path for the log file.
 	 *
-	 * @param pathOfLogFile the pathOfLogFile to set
+	 * @param pathOfLogFile The pathOfLogFile to set
 	 */
 	public void setPathOfLogFile(String pathOfLogFile)
 	{
@@ -143,9 +143,9 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain whether or not the logger is enabled.
 	 *
-	 * @return the enabled
+	 * @return Whether or not the Logger is enabled.
 	 */
 	public boolean isEnabled()
 	{
@@ -159,24 +159,23 @@ public class ThermostatLogger
 	 */
 	public void setEnabled(boolean enabled)
 	{
+		//Set the enabled flag
 		this.enabled = enabled;
 
 		if(enabled)
 		{
 			fileHandler.setLevel(Level.ALL);
-			System.out.println("Setting logger to enabled ALL");
 		}
 		else
 		{
 			fileHandler.setLevel(Level.OFF);
-			System.out.println("Setting logger to disabled OFF");
 		}
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain the current logging level.
 	 *
-	 * @return the loggingLevel
+	 * @return The loggingLevel.
 	 */
 	public int getLoggingLevel()
 	{
@@ -184,7 +183,7 @@ public class ThermostatLogger
 	}
 
 	/**
-	 * Method Description
+	 * Method used to obtain the logging level of the Logger.
 	 *
 	 * @param loggingLevel the loggingLevel to set
 	 */
@@ -195,27 +194,22 @@ public class ThermostatLogger
 		if(loggingLevel == 0)
 		{
 			fileHandler.setLevel(Level.OFF);
-			System.out.println("Setting logger to OFF");
 		}
 		else if(loggingLevel == 1)
 		{
 			fileHandler.setLevel(Level.SEVERE);
-			System.out.println("Setting logger to SEVERE");
 		}
 		else if(loggingLevel == 2)
 		{
 			fileHandler.setLevel(Level.WARNING);
-			System.out.println("Setting logger to WARNING");
 		}
 		else if(loggingLevel == 3)
 		{
 			fileHandler.setLevel(Level.INFO);
-			System.out.println("Setting logger to INFO");
 		}
 		else if(loggingLevel == 4)
 		{
 			fileHandler.setLevel(Level.CONFIG);
-			System.out.println("Setting logger to CONFIG");
 		}
 		else
 		{

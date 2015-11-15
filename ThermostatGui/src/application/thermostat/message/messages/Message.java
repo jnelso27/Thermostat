@@ -3,9 +3,12 @@ package application.thermostat.message.messages;
 import application.thermostat.crc.CRCGenerator;
 
 /***
- * Class Description
+ * Message class that represents a generic message to be transferred from
+ * the host (PC) to the client (MCU).
  *
- * Date of Last Change: 2015-10-22
+ * Class is required to be subclassed for each type of message.
+ *
+ * Date of Last Change: 2015-11-15
  *
  * @author J Nelson
  *
@@ -27,8 +30,9 @@ public abstract class Message
 	public static final int REC_MSG_CRCBYTE2_NDX = 5;
 	public static final int REC_MSG_FOOTER_NDX = 6;
 
-	/** Size of the message */
+	/** Size of the message and payload portion of message */
 	public static final int MESSAGE_SIZE = 7;
+	public static final int PAYLOAD_SIZE = 3;
 
 	/** Indexes used for message */
 	private final int MSG_MSB = 0;
@@ -84,7 +88,7 @@ public abstract class Message
 	/**
 	 * Method used to get the message byte array
 	 *
-	 * @return
+	 * @return An array of bytes representing the full message.
 	 */
 	public byte[] getMessageBytes()
 	{
@@ -94,7 +98,7 @@ public abstract class Message
 	/**
 	 * Method used to obtain the type of the message
 	 *
-	 * @return
+	 * @return The type of message (byte).
 	 */
 	public byte getMessageType()
 	{
@@ -104,7 +108,7 @@ public abstract class Message
 	/**
 	 * Method used to obtain the Most Significant Bit of the Message
 	 *
-	 * @return
+	 * @return The MSB (byte) of the message.
 	 */
 	public byte getMessageMSB()
 	{
@@ -114,7 +118,7 @@ public abstract class Message
 	/**
 	 * Method used to obtain the Least Significant Bit of the Message
 	 *
-	 * @return
+	 * @return The LSB (byte) of the message.
 	 */
 	public byte getMessageLSB()
 	{
@@ -132,6 +136,8 @@ public abstract class Message
 		messageToString.append((char) message[REC_MSG_TYPE_NDX]);
 		messageToString.append((char) message[REC_MSG_DATA_MSB_NDX]);
 		messageToString.append((char) message[REC_MSG_DATA_LSB_NDX]);
+		messageToString.append((char) message[REC_MSG_CRCBYTE1_NDX]);
+		messageToString.append((char) message[REC_MSG_CRCBYTE2_NDX]);
 		messageToString.append((char) message[REC_MSG_FOOTER_NDX]);
 
 		return messageToString.toString();

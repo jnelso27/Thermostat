@@ -19,7 +19,8 @@ import application.thermostat.message.processor.MessageProcessor;
 import application.thermostat.sensors.Sensor;
 
 /***
- * Class used to receive a message
+ * Class used to receive messages on the configured serial port
+ * for the Thermostat system.
  *
  * Date of Last Change: 2015-10-22
  *
@@ -65,7 +66,7 @@ public class MessageReceiver
 			serialPort.openPort();
 			serialPort.setParams(baudRate, dataBits, stopBits, parityBits);
 			serialPort.setEventsMask(mask);
-			serialPort.addEventListener(new SerialPortReader(this.sensorSuite));
+			serialPort.addEventListener(new SerialPortMessageListener(this.sensorSuite));
 		}
 		catch(SerialPortException ex)
 		{
@@ -75,10 +76,10 @@ public class MessageReceiver
 	}
 
 	/**
-	 * Method Description
+	 * Overloaded Constructor
 	 *
-	 * @param sensorSuite
-	 * @param comPort
+	 * @param sensorSuite List of configured sensors as loaded from the XML configuration settings file.
+	 * @param comPort The COM port to receive messages on.
 	 */
 	public MessageReceiver(LinkedList<Sensor> sensorSuite, String comPort)
 	{
@@ -94,7 +95,7 @@ public class MessageReceiver
 			serialPort.openPort();
 			serialPort.setParams(baudRate, dataBits, stopBits, parityBits);
 			serialPort.setEventsMask(mask);
-			serialPort.addEventListener(new SerialPortReader(this.sensorSuite));
+			serialPort.addEventListener(new SerialPortMessageListener(this.sensorSuite));
 
 			//Replace with a Logger message here in a future version...
 			System.out.println("Message Reciever Initialized Successfully");
@@ -107,9 +108,9 @@ public class MessageReceiver
 	}
 
 	/**
-	 * Method used to obtain the serial port
+	 * Method used to obtain the serial port instance.
 	 *
-	 * @return
+	 * @return The SerialPort instance.
 	 */
 	public static SerialPort getSerialPortInstance()
 	{
@@ -159,7 +160,7 @@ public class MessageReceiver
 	/**
 	 * Method used to obtain the currently set data bits
 	 *
-	 * @return the dataBits
+	 * @return The number of configured data bits for the serial port.
 	 */
 	public int getDataBits()
 	{
@@ -169,7 +170,7 @@ public class MessageReceiver
 	/**
 	 * Method used to set the data bits for the serial port
 	 *
-	 * @param dataBits the dataBits to set
+	 * @param dataBits The number of data bits to configure for the serial port.
 	 */
 	public void setDataBits(int dataBits)
 	{
@@ -179,7 +180,7 @@ public class MessageReceiver
 	/**
 	 * Method used to obtain the currently set stop bits for the serial port
 	 *
-	 * @return the stopBits
+	 * @return The number of configured stop bits for the serial port.
 	 */
 	public int getStopBits()
 	{
@@ -189,7 +190,7 @@ public class MessageReceiver
 	/**
 	 * Method used to set the number of stop bits for the serial port
 	 *
-	 * @param stopBits the stopBits to set
+	 * @param stopBits The number of stop bits to configure for the serial port.
 	 */
 	public void setStopBits(int stopBits)
 	{
@@ -199,7 +200,7 @@ public class MessageReceiver
 	/**
 	 * Method used to obtain the number of currently set parity bits of the serial port
 	 *
-	 * @return the parityBits
+	 * @return The number of configured parity bits for the serial port.
 	 */
 	public int getParityBits()
 	{
@@ -209,7 +210,7 @@ public class MessageReceiver
 	/**
 	 * Method used to set the number of parity bits for the serial port
 	 *
-	 * @param parityBits the parityBits to set
+	 * @param parityBits The number of parity bits to configure for the serial port.
 	 */
 	public void setParityBits(int parityBits)
 	{
@@ -219,35 +220,36 @@ public class MessageReceiver
 	/**
 	 * Method used to check the validity of the Serial Message
 	 *
-	 * @param receivedMessage
-	 * @return msgIsValid
+	 * @param receivedMessage The message that has been received on the serial port.
+	 * @return msgIsValid True/false as to whether the message has passed the CRC.
 	 */
 	public static boolean verifyMessageValidity(byte[] receivedMessage)
 	{
-		//Set message validity to false initially
+		//Assume message is not valid
 		boolean msgIsValid = false;
 
-		//
-		if(receivedMessage[Message.REC_MSG_HEADER_NDX] == Message.messageHeader && receivedMessage[Message.REC_MSG_FOOTER_NDX] == Message.messageFooter)
+		//Validate the header and footer
+		if(receivedMessage[Message.REC_MSG_HEADER_NDX] == Message.messageHeader &&
+				receivedMessage[Message.REC_MSG_FOOTER_NDX] == Message.messageFooter)
 		{
-			byte[] payload = new byte[3];
+			byte[] payload = new byte[Message.PAYLOAD_SIZE];
 
-			//Get Payload
-			for(int i=1;i<4;i++)
+			//Build Payload from the received message
+			for(int i=1; i<4; i++)
 			{
 				payload[i-1] = receivedMessage[i];
 			}
-			int calculatedMessageCRC = CRCGenerator.calculateCRCCCITTXModem(payload);
 
-			System.out.println("calculatedMessageCRC: "+ calculatedMessageCRC);
+			//Calculate the CRC of the message
+			int calculatedMessageCRC = CRCGenerator.calculateCRCCCITTXModem(payload);
 
 			//Convert Received Message CRC to integer for comparison
 			int receivedMessageCRC = receivedMessage[Message.REC_MSG_CRCBYTE1_NDX] &0xFF;
-			receivedMessageCRC <<= 8;
+			receivedMessageCRC <<= 8;	//shift one byte
 			receivedMessageCRC |= receivedMessage[Message.REC_MSG_CRCBYTE2_NDX] & 0xFF;
 
-			System.out.println("receivedMessageCRC: "+ receivedMessageCRC);
-
+			//Compare the calculated CRC with received CRC and
+			//set msgIsValide to true if they are equal.
 			if(calculatedMessageCRC == receivedMessageCRC)
 			{
 				msgIsValid = true;
@@ -258,12 +260,12 @@ public class MessageReceiver
 	}
 
 	/**
-	 * Class Description
+	 * SerialPortEventListener implementation for receiving messages on the serial port.
 	 *
 	 * @author J Nelson
 	 *
 	 */
-	public static class SerialPortReader implements SerialPortEventListener
+	public static class SerialPortMessageListener implements SerialPortEventListener
 	{
 		/** Variable Description */
 		boolean msgValidity;
@@ -275,7 +277,7 @@ public class MessageReceiver
 		LinkedList<Sensor> sensorSuite = new LinkedList<Sensor>();
 
 		/** Period to wait for message before assuming an error has occurred */
-		private int receivedMessageTimeOutPeriod = 30;
+		private int receivedMessageTimeOutPeriod = 5;
 
 		/** Callable object used as a timer */
 		Callable messageNotReceivedTask = new Callable()
@@ -288,7 +290,7 @@ public class MessageReceiver
 			}
 		};
 
-		/** Variable Description */
+		/** Threadpool for power disruption service thread */
 		ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(1);
 
 		/** Variable Description */
@@ -299,7 +301,7 @@ public class MessageReceiver
 		 *
 		 * @param sensorSuite
 		 */
-		public SerialPortReader(LinkedList<Sensor> sensorSuite)
+		public SerialPortMessageListener(LinkedList<Sensor> sensorSuite)
 		{
 			this.sensorSuite = sensorSuite;
 
@@ -321,59 +323,39 @@ public class MessageReceiver
 	            {
 	                try
 	                {
+	                	//Read the bytes from the serial port
 	                	final byte buffer[] = serialPort.readBytes(event.getEventValue());
 
+	                	//Validate the message integrity
 	                	msgValidity = verifyMessageValidity(buffer);
 
 	                	try
 	                	{
 		                	if(msgValidity)
 		                	{
-		                		System.out.println("Received Message with Good CRC. Processing Msg");
-
-		                		//Put code here to reset the task
+		                		//Add code here to reset the task
 
 		                		msgProcessor.processMessage(buffer);
 		                	}
 		                	else
 		                	{
-		                		System.out.println("Received Message with Bad CRC");
+		                		//Add Logger statement here in a future update.
 		                	}
 	                	}
 	                	catch(Exception e)
 	                	{
+	                		//Add Logger statement here in a future update.
 	                		System.out.println("An exception occurred: " + e);
 	                	}
 	                }
 	                catch (SerialPortException ex)
 	                {
+	                	//Add Logger statement here in a future update.
 	                	System.out.println("An exception occurred: " + ex);
 	                }
-	            }
-	        }
-	        //If the CTS line status has changed, then the method event.getEventValue() returns 1 if the line is ON and 0 if it is OFF.
-	        else if(event.isCTS())
-	        {
-	            if(event.getEventValue() == 1)
-	            {
-	                System.out.println("CTS - ON");
-	            }
-	            else
-	            {
-	                System.out.println("CTS - OFF");
-	            }
-	        }
-	        else if(event.isDSR())
-	        {
-	            if(event.getEventValue() == 1)
-	            {
-	                System.out.println("DSR - ON");
-	            }
-	            else
-	            {
-	                System.out.println("DSR - OFF");
-	            }
-	        }
-	    }
-	}
-}
+
+	            } //end if if(event.getEventValue() == Message.MESSAGE_SIZE)
+	        } //end if(event.isRXCHAR())
+	    } // end serialEvent()
+	} // end class SerialPortMessageListener
+} // class MessageReceiver

@@ -294,7 +294,15 @@ public class ThermostatGUI extends Application
     	{
             public void handle(ActionEvent t)
             {
-                thermostat.startSensorMeasurements();
+            	//Verify there is a valid connection with the thermostat.
+            	if(MessageReceiver.getSerialPortInstance().isOpened())
+            	{
+            		thermostat.startSensorMeasurements();
+            	}
+            	else
+            	{
+            		ThermostatGUI.showErrorDialog("Unable to connect to Thermostat!\nPlease verify connection and try again.");
+            	}
             }
         });
 
@@ -364,7 +372,8 @@ public class ThermostatGUI extends Application
 				}
                 catch (SerialPortException e)
                 {
-					e.printStackTrace();
+                	//ThermostatGUI.showErrorDialog("No messages received in the last 30 seconds");
+					//e.printStackTrace();
 				}
 
                 Platform.exit();
