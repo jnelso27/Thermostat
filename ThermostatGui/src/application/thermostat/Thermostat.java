@@ -102,6 +102,9 @@ public class Thermostat extends Observable
 		messageReciever = new MessageReceiver(sensorSuite, comPort);
 		messageSender = new MessageSender();
 
+		getSensor(ALARM_SENSOR).requestSensorData(AlarmSensor.NORMAL_ALARM_REQUEST);
+		alarmLevel = AlarmLevel.NORMAL;
+
 		sensorMeasurementsTask = new Runnable()
 		{
 			@Override

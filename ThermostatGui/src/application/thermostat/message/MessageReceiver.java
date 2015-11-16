@@ -285,15 +285,18 @@ public class MessageReceiver
 			@Override
 			public Object call() throws Exception
 			{
-				ThermostatGUI.showErrorDialog("No messages received in the last 30 seconds");
-				return "Message Not Received in the last 30 seconds!";
+				ThermostatGUI.showErrorDialog("The host has not received status from the Thermostat for the last 5 seconds.\n\n"
+						+ "If the system has not yet been started by selecting 'File'->'System ON' or 'System OFF' has been selected, "
+						+ "then please disregard this message\n\n"
+						+ "Otherwise please check the system's power connection as the host has not received messages from the Thermostat System.");
+				return "Message Not Received in the last 5 seconds!";
 			}
 		};
 
 		/** Threadpool for power disruption service thread */
 		ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(1);
 
-		/** Variable Description */
+		/** Scheduled future for firing indication of missed messages */
 		ScheduledFuture sf = scheduledPool.schedule(messageNotReceivedTask, receivedMessageTimeOutPeriod, TimeUnit.SECONDS);
 
 		/**
