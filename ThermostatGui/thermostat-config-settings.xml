@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ThermostatSettings>
 	<ApplicationSettings>
-		<Highthreshold>80.0</Highthreshold>
+		<Highthreshold>78.0</Highthreshold>
 		<Lowthreshold>75.0</Lowthreshold>
 		<TemperatureUnitsInFarenheit>true</TemperatureUnitsInFarenheit>
 		<LoggingEnabled>false</LoggingEnabled>
